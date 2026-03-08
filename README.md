@@ -1,8 +1,10 @@
 # Mega-Mind Skills System
 
-> **A unified superpowers + virtual company skill set for Antigravity IDE**
+> **A unified superpowers + virtual company skill set for AI coding assistants**
 
 This is a comprehensive skill-based workflow system that combines the disciplined development workflows of [Superpowers](https://github.com/obra/superpowers) with the domain expertise of [Virtual Company](https://github.com/k1lgor/virtual-company). It provides structured, reliable behavior for AI coding assistants across the entire software development lifecycle.
+
+**Compatible with:** Antigravity · GitHub Copilot (VS Code) · Claude Code · Cursor · OpenCode · and any AI tool that supports the [Agent Skills open standard](https://agentskills.io)
 
 ## Overview
 
@@ -76,15 +78,25 @@ uv tool install mega-mind-orchestrator
 ```bash
 # From your project root
 cd /path/to/your/project
+
+# Standard install (Antigravity, Cursor, Claude Code, etc.)
 mega-mind init
-```
 
-This copies the full `.agent/` directory into your project — all 42 skills, workflows, and agents are ready to use.
+# Also install for GitHub Copilot (VS Code)
+mega-mind init --copilot
 
-```bash
 # Overwrite an existing installation
 mega-mind init --force
+mega-mind init --copilot --force
 ```
+
+The `--copilot` flag adds a `.github/` directory with:
+
+- `copilot-instructions.md` — global instructions loaded automatically
+- `skills/<name>/SKILL.md` — all 42 skills available as `/` slash commands
+- `agents/<name>.agent.md` — custom agent personas for VS Code
+
+> 📖 For full details see [USAGE.md](./USAGE.md)
 
 ### 3. Verify the installation
 
@@ -357,14 +369,19 @@ See [USAGE.md](./USAGE.md) for the full installation guide.
 ### CLI Reference
 
 ```bash
-# Install skills into current directory
+# Install skills into current directory (Antigravity / Claude / Cursor / standard)
 mega-mind init
+
+# Also install for GitHub Copilot (VS Code)
+mega-mind init --copilot
 
 # Install into a specific path
 mega-mind init /path/to/project
+mega-mind init /path/to/project --copilot
 
-# Overwrite existing .agent directory
+# Overwrite existing installation
 mega-mind init --force
+mega-mind init --copilot --force
 
 # Show CLI version
 mega-mind --version

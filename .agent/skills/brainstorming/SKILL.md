@@ -81,14 +81,34 @@ For each approach, consider:
    - What are the unknowns?
    - How can risks be mitigated?
 
-### Step 4: Make a Recommendation
+### Step 4: Present Options and Wait for Selection
 
 After evaluation:
 
-1. **Select the best approach** based on weighted criteria
-2. **Document the rationale** for the choice
-3. **Identify next steps** for implementation
-4. **Note any assumptions** that need validation
+1. **Present all evaluated approaches** with their scores
+2. **State your recommended approach** with clear rationale
+3. **STOP — ask the user to confirm which approach to use**
+
+This is the **only mandatory pause in the workflow**. Because multiple approaches have been considered, the user must explicitly choose before anything is planned or built.
+
+End every brainstorming session with this block:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⏸️  BRAINSTORMING COMPLETE — PLEASE CHOOSE AN APPROACH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I've evaluated [N] approaches above.
+My recommendation is: **Approach [X]** — [one-line reason]
+
+Which approach should I proceed with?
+  → Reply with the approach name or letter (e.g. "A", "Approach B", "go with Redis")
+  → Or say "change X" if you'd like adjustments to any option first
+
+Once you choose, I'll move straight into planning and implementation.
+```
+
+Do NOT write any code, create any files, or proceed to the next skill until the user has replied with their chosen approach.
 
 ## Output Format
 
