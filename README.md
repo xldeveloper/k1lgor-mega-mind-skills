@@ -70,7 +70,7 @@ pip install mega-mind-orchestrator
 pipx install mega-mind-orchestrator
 
 # uv
-uv tool install mega-mind-orchestrator
+uvx --from mega-mind-orchestrator mega-mind
 ```
 
 ### 2. Initialize skills in your project

@@ -23,7 +23,7 @@ pipx install mega-mind-orchestrator
 ### uv
 
 ```bash
-uv tool install mega-mind-orchestrator
+uvx --from mega-mind-orchestrator mega-mind
 ```
 
 ---
