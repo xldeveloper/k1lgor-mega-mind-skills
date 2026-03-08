@@ -1,1 +1,1 @@
-# Mega-Mind Tool
+__version__ = "0.1.1"
