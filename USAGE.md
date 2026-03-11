@@ -38,6 +38,14 @@ mega-mind init
 
 This copies the full `.agent/` directory — containing all 42 skills, workflows, and agent definitions — into your project.
 
+### For Claude Code (CLI)
+
+To also install in the format Claude Code expects, add the `--claude` flag:
+
+```bash
+mega-mind init --claude
+```
+
 ### For GitHub Copilot (VS Code)
 
 To also install in the format GitHub Copilot expects, add the `--copilot` flag:
@@ -46,15 +54,17 @@ To also install in the format GitHub Copilot expects, add the `--copilot` flag:
 mega-mind init --copilot
 ```
 
-This installs **both**:
+This installs:
 
-- `.agent/` — for Antigravity, Cursor, Claude Code, and other AI tools
-- `.github/` — for GitHub Copilot in VS Code
+- `.agent/` — Core skill system for all tools
+- `CLAUDE.md` and `.claude/` — Specialized for Claude Code
+- `.github/` — Specialized for GitHub Copilot in VS Code
 
 ### Target a specific directory
 
 ```bash
 mega-mind init /path/to/your/project
+mega-mind init /path/to/your/project --claude
 mega-mind init /path/to/your/project --copilot
 ```
 
@@ -62,7 +72,9 @@ mega-mind init /path/to/your/project --copilot
 
 ```bash
 mega-mind init --force
+mega-mind init --claude --force
 mega-mind init --copilot --force
+mega-mind init --copilot --claude --force
 ```
 
 > ⚠️ `--force` overwrites the existing directories completely.
@@ -84,11 +96,21 @@ your-project/
         └── run-tests.sh   # Validates the installation
 ```
 
+### With Claude Code (`mega-mind init --claude`)
+
+```
+your-project/
+├── .agent/          # Standard AI tool format
+└── CLAUDE.md        # Specialized project rules for Claude
+└── .claude/
+     └── skills/      # 42 skills as Agent Skills
+```
+
 ### With Copilot (`mega-mind init --copilot`)
 
 ```
 your-project/
-├── .agent/                            # Standard AI tool format (as above)
+├── .agent/                            # Standard AI tool format
 └── .github/
     ├── copilot-instructions.md        # Global Copilot instructions
     ├── skills/                        # 42 skills as Agent Skills (open standard)
