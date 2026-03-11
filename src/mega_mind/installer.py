@@ -2,13 +2,16 @@ import shutil
 from pathlib import Path
 
 
-def install_skills(target_dir: str, force: bool = False, copilot: bool = False):
+def install_skills(
+    target_dir: str, force: bool = False, copilot: bool = False, claude: bool = False
+):
     """Copies assets to the target .agent directory.
 
     Args:
         target_dir: The root directory of the project to install into.
         force: If True, overwrite existing files.
         copilot: If True, also install skills into .github/ for GitHub Copilot.
+        claude: If True, also install skills into CLAUDE.md and .claude/ for Claude Code.
     """
     target_path = Path(target_dir).resolve()
     agent_path = target_path / ".agent"
@@ -29,6 +32,9 @@ def install_skills(target_dir: str, force: bool = False, copilot: bool = False):
 
     if copilot:
         _install_github_copilot(assets_src, target_path, force)
+
+    if claude:
+        _install_claude_code(assets_src, target_path, force)
 
 
 def _install_github_copilot(assets_src: Path, target_path: Path, force: bool):
@@ -94,3 +100,32 @@ def _install_github_copilot(assets_src: Path, target_path: Path, force: bool):
                         )
                         content = frontmatter + content
                     dest_file.write_text(content, encoding="utf-8")
+
+
+def _install_claude_code(assets_src: Path, target_path: Path, force: bool):
+    """Install Claude Code-compatible files.
+
+    Creates:
+      CLAUDE.md       — project rules (from AGENTS.md)
+      .claude/skills/ — all skills (Agent Skills standard)
+    """
+    # 1. Create CLAUDE.md in root (mirror of AGENTS.md)
+    agents_md = assets_src / "AGENTS.md"
+    claude_md = target_path / "CLAUDE.md"
+    if agents_md.exists():
+        if not claude_md.exists() or force:
+            shutil.copy2(agents_md, claude_md)
+
+    # 2. Copy skills to .claude/skills/<name>/SKILL.md
+    skills_src = assets_src / "skills"
+    claude_skills_dst = target_path / ".claude" / "skills"
+    if skills_src.exists():
+        for skill_dir in skills_src.iterdir():
+            if skill_dir.is_dir():
+                skill_md = skill_dir / "SKILL.md"
+                if skill_md.exists():
+                    dest_dir = claude_skills_dst / skill_dir.name
+                    dest_dir.mkdir(parents=True, exist_ok=True)
+                    dest_file = dest_dir / "SKILL.md"
+                    if not dest_file.exists() or force:
+                        shutil.copy2(skill_md, dest_file)
