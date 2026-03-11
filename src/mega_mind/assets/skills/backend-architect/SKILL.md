@@ -1,5 +1,6 @@
 ---
 name: backend-architect
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Server-side logic and architecture patterns. Use for backend architecture decisions.
 triggers:
   - "backend architecture"

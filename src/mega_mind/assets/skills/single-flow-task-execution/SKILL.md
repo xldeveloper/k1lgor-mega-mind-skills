@@ -1,5 +1,6 @@
 ---
 name: single-flow-task-execution
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Ordered task decomposition with review gates for sequential execution. Use for complex tasks that need to be broken down and executed in order.
 triggers:
   - "break this down and implement"

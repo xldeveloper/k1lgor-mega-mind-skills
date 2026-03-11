@@ -1,5 +1,6 @@
 ---
 name: performance-profiler
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Optimization and performance tuning. Use for performance analysis and optimization.
 triggers:
   - "optimize performance"

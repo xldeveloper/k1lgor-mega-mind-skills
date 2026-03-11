@@ -1,5 +1,6 @@
 ---
 name: ci-config-helper
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: CI/CD (GitHub Actions, GitLab) setup. Use for configuring continuous integration and deployment.
 triggers:
   - "CI/CD"

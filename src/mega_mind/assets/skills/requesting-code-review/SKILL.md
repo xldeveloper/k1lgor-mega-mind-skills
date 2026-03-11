@@ -1,5 +1,6 @@
 ---
 name: requesting-code-review
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Structured review flow with checklists. Use when your code is ready for review.
 triggers:
   - "review this code"

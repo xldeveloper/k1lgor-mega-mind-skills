@@ -1,5 +1,6 @@
 ---
 name: doc-writer
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Generating docs, READMEs, and inline comments. Use for all documentation needs.
 triggers:
   - "write documentation"

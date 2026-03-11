@@ -1,5 +1,6 @@
 ---
 name: product-manager
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Task breakdown and user stories. Use for product planning and task management.
 triggers:
   - "product management"

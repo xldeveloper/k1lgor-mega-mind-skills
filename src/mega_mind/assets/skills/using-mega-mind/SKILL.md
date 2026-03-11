@@ -1,5 +1,6 @@
 ---
 name: using-mega-mind
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Internal skill routing logic used by the mega-mind orchestrator. This skill handles session bootstrap and request routing to appropriate skills.
 triggers:
   - "start session"

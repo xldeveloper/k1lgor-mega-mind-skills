@@ -1,5 +1,6 @@
 ---
 name: verification-before-completion
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Prove it works before claiming it's done. Use before marking any task complete.
 triggers:
   - "mark as done"

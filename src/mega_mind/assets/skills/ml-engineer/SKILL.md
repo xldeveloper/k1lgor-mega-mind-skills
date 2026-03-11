@@ -1,5 +1,6 @@
 ---
 name: ml-engineer
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Machine learning pipelines and integrations. Use for ML/AI development tasks.
 triggers:
   - "machine learning"

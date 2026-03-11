@@ -1,5 +1,6 @@
 ---
 name: using-git-worktrees
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Parallel branch management with Git worktrees. Use when working on multiple features simultaneously.
 triggers:
   - "work on multiple features"

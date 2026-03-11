@@ -1,5 +1,6 @@
 ---
 name: observability-specialist
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Logging, tracing, and monitoring setup. Use for observability and monitoring tasks.
 triggers:
   - "observability"

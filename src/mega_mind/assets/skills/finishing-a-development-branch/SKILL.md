@@ -1,5 +1,6 @@
 ---
 name: finishing-a-development-branch
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Clean branch wrap-up with workflow options. Use when a feature branch is complete and ready to merge.
 triggers:
   - "merge this branch"

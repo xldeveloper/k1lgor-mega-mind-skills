@@ -1,5 +1,6 @@
 ---
 name: migration-upgrader
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Version upgrades and framework migrations. Use for upgrading dependencies or migrating between frameworks.
 triggers:
   - "upgrade dependencies"

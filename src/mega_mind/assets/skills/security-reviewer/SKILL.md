@@ -1,5 +1,6 @@
 ---
 name: security-reviewer
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Security audits and vulnerability checks. Use for security-related tasks.
 triggers:
   - "security audit"

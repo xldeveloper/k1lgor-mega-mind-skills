@@ -1,5 +1,6 @@
 ---
 name: api-designer
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: REST/GraphQL API design and OpenAPI specs. Use for API design tasks.
 triggers:
   - "design API"

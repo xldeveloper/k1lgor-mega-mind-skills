@@ -1,5 +1,6 @@
 ---
 name: code-polisher
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Refactoring and improving code quality. Use for cleaning up and optimizing existing code.
 triggers:
   - "refactor this"

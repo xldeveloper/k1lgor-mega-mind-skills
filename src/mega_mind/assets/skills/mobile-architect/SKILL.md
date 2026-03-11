@@ -1,5 +1,6 @@
 ---
 name: mobile-architect
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: iOS/Android and Flutter/React Native dev. Use for mobile application development.
 triggers:
   - "mobile app"

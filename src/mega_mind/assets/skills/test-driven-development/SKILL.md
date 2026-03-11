@@ -1,5 +1,6 @@
 ---
 name: test-driven-development
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Write tests first, implement second. Use when building new features that benefit from a test-first approach.
 triggers:
   - "implement with TDD"

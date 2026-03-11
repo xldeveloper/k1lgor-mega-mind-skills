@@ -1,5 +1,6 @@
 ---
 name: infra-architect
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: IaC (Terraform, CloudFormation) and Cloud setup. Use for infrastructure design and management.
 triggers:
   - "infrastructure"

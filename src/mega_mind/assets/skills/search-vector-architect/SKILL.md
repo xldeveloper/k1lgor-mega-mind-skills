@@ -1,5 +1,6 @@
 ---
 name: search-vector-architect
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Vector search (RAG) and Elasticsearch. Use for search and vector database tasks.
 triggers:
   - "vector search"

@@ -1,8 +1,12 @@
 # Mega-Mind Agent Skills System
 
-> **A unified superpowers + virtual company skill set for Antigravity IDE**
+> **A unified superpowers + virtual company skill set for AI coding assistants**
 
-This is a comprehensive skill-based workflow system that combines the disciplined development workflows of Superpowers with the domain expertise of Virtual Company. It provides structured, reliable behavior for AI coding assistants across the entire software development lifecycle.
+This is a comprehensive skill-based workflow system that combines the disciplined development workflows of Superpowers with the domain expertise of Virtual Company. It provides structured, reliable behavior for Antigravity, Claude Code, GitHub Copilot, and other agentic tools.
+
+**Compatible with:** Antigravity · Claude Code · GitHub Copilot · Cursor · OpenCode
+
+---
 
 ## Quick Start
 

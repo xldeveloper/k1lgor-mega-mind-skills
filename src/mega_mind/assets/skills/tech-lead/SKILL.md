@@ -1,5 +1,6 @@
 ---
 name: tech-lead
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Complex project planning and orchestration. Use for architectural decisions, project planning, and coordinating multiple features or team members.
 triggers:
   - "plan this project"

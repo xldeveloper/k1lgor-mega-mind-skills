@@ -1,5 +1,6 @@
 ---
 name: data-engineer
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: SQL, ETL, and data transformation. Use for data engineering tasks.
 triggers:
   - "data engineering"
