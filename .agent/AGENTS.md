@@ -1,8 +1,12 @@
 # Mega-Mind Agent Skills System
 
-> **A unified superpowers + virtual company skill set for Antigravity IDE**
+> **A unified superpowers + virtual company skill set for AI coding assistants**
 
-This is a comprehensive skill-based workflow system that combines the disciplined development workflows of Superpowers with the domain expertise of Virtual Company. It provides structured, reliable behavior for AI coding assistants across the entire software development lifecycle.
+This is a comprehensive skill-based workflow system that combines the disciplined development workflows of Superpowers with the domain expertise of Virtual Company. It provides structured, reliable behavior for Antigravity, Claude Code, GitHub Copilot, and other agentic tools.
+
+**Compatible with:** Antigravity · Claude Code · GitHub Copilot · Cursor · OpenCode
+
+---
 
 ## Quick Start
 
@@ -264,9 +268,9 @@ When a request comes in, `/mega-mind` routes to the appropriate skill:
 
 All tasks are tracked in a live table at `<project-root>/docs/plans/task.md`:
 
-| Task ID | Description  | Status  | Priority | Dependencies |
-| ------- | ------------ | ------- | -------- | ------------ |
-| 1       | Example task | pending | high     | -            |
+| Task ID | Description  | Status      | Skill         | Started    |
+| ------- | ------------ | ----------- | ------------- | ---------- |
+| 1       | Example task | in_progress | brainstorming | 2024-01-15 |
 
 Status values: `pending`, `in_progress`, `completed`, `blocked`
 

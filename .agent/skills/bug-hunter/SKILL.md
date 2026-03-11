@@ -1,5 +1,6 @@
 ---
 name: bug-hunter
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Debugging, crash analysis, and stack trace fixing. Use for finding and fixing bugs.
 triggers:
   - "find the bug"

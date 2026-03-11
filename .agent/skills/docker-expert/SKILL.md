@@ -1,5 +1,6 @@
 ---
 name: docker-expert
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Dockerfiles and container orchestration. Use for Docker-related tasks.
 triggers:
   - "docker"

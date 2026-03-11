@@ -1,5 +1,6 @@
 ---
 name: systematic-debugging
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Root cause tracing with supporting techniques for systematic bug diagnosis and fixing.
 triggers:
   - "debug this"

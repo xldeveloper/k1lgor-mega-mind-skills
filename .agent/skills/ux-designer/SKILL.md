@@ -1,5 +1,6 @@
 ---
 name: ux-designer
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: UI/UX flows and design systems. Use for user experience design tasks.
 triggers:
   - "UX design"

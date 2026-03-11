@@ -1,5 +1,6 @@
 ---
 name: workflow-orchestrator
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Complex task scheduling and orchestration. Use for workflow automation tasks.
 triggers:
   - "workflow automation"

@@ -1,5 +1,6 @@
 ---
 name: e2e-test-specialist
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Playwright/Cypress end-to-end testing. Use for E2E testing tasks.
 triggers:
   - "E2E testing"

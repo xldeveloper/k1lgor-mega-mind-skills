@@ -1,5 +1,6 @@
 ---
 name: test-genius
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Writing unit tests and increasing coverage. Use for all testing-related tasks.
 triggers:
   - "write tests"

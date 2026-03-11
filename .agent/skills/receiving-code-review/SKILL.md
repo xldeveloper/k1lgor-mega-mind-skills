@@ -1,5 +1,6 @@
 ---
 name: receiving-code-review
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Handling feedback systematically. Use when you receive code review feedback.
 triggers:
   - "got review feedback"

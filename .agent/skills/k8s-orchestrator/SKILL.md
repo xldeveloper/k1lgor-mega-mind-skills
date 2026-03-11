@@ -1,5 +1,6 @@
 ---
 name: k8s-orchestrator
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Kubernetes manifests and Helm charts. Use for Kubernetes deployment tasks.
 triggers:
   - "kubernetes"

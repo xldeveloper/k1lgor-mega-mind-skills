@@ -1,5 +1,6 @@
 ---
 name: skill-generator
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Creating and debugging new SKILL.md files. Use for creating custom skills.
 triggers:
   - "create skill"

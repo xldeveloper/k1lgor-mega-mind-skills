@@ -1,5 +1,6 @@
 ---
 name: brainstorming
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Structured exploration before committing to an approach. Use when facing ambiguous problems, new features, architectural decisions, or any situation where multiple approaches are possible.
 triggers:
   - "I need to design"

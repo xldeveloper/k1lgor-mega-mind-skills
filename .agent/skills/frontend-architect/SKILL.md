@@ -1,5 +1,6 @@
 ---
 name: frontend-architect
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: UI, Components, and Responsive Design. Use for frontend architecture decisions.
 triggers:
   - "frontend architecture"

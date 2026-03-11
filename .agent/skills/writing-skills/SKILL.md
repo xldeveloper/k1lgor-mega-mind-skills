@@ -1,5 +1,6 @@
 ---
 name: writing-skills
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Create new skills that follow the system's conventions. Use when creating custom skills.
 triggers:
   - "create a skill"

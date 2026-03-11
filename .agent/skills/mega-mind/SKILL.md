@@ -1,5 +1,6 @@
 ---
 name: mega-mind
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: |
   Master orchestrator for the Mega-Mind skill system. This is the primary entry point that analyzes requests,
   coordinates multiple skills, and manages complex workflows. Use /mega-mind to invoke the orchestrator.

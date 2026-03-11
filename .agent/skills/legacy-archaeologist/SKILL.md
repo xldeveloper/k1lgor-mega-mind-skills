@@ -1,5 +1,6 @@
 ---
 name: legacy-archaeologist
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Understanding and refactoring legacy code. Use for working with existing/legacy systems.
 triggers:
   - "legacy code"

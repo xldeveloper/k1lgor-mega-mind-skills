@@ -1,5 +1,6 @@
 ---
 name: executing-plans
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Disciplined plan execution with progress tracking. Use when you have a plan to implement and need to track progress systematically.
 triggers:
   - "execute the plan"

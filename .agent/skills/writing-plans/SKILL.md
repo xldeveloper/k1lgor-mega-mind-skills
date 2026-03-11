@@ -1,5 +1,6 @@
 ---
 name: writing-plans
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Create detailed, step-by-step implementation plans. Use after brainstorming to document the execution strategy, or when tasked with creating a plan for a feature or change.
 triggers:
   - "create a plan"

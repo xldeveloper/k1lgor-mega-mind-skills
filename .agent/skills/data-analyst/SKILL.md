@@ -1,5 +1,6 @@
 ---
 name: data-analyst
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: Data visualization and insights (Python/SQL). Use for data analysis and reporting.
 triggers:
   - "data analysis"

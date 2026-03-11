@@ -1,5 +1,6 @@
 ---
 name: rtk
+compatibility: Antigravity, Claude Code, GitHub Copilot
 description: |
   RTK (Rust Token Killer) is a CLI proxy that reduces LLM token consumption by 60-90%
   on common development commands. Use this skill to optimize CLI operations and track
