@@ -56,38 +56,59 @@ Specialized expertise from Virtual Company:
 - Documentation: `doc-writer`
 - UX: `ux-designer`
 - Product: `product-manager`, `workflow-orchestrator`
-- Meta: `skill-generator`
+- Meta: `skill-generator`, `context-optimizer`
 
-### Token Optimization (1 skill)
+### Token Optimization & Context (2 skills)
 
-CLI token savings with RTK:
+CLI token savings with RTK and Context window optimization:
 
 - `rtk` - Rust Token Killer for 60-90% token reduction on CLI commands
+- `context-optimizer` - Context offloading and session continuity via FTS5 database
 
 ### RTK MANDATORY USAGE RULE
 
-**You MUST use RTK-wrapped commands for all supported CLI operations.** Failure to use RTK when it is available is a violation of the "Aesthetics and Performance" contract.
+**You MUST use RTK-wrapped commands for all supported CLI operations if RTK is installed.**
 
-- ALWAYS use `rtk git status` instead of `git status`
-- ALWAYS use `rtk lint` instead of `npm run lint`
-- ALWAYS use `rtk tsc` instead of `npx tsc`
-- ALWAYS use `rtk npm test` or `rtk vitest` for testing
+**Before running any terminal command for the first time in a session:**
 
-If you are unsure if a command is supported, try `rtk <command>` first or use `rtk proxy <command>`.
+1. Check if RTK is available by running `rtk --version`.
+2. If available, ALWAYS prepend `rtk ` (or `rtk proxy ` if unsure) to your terminal commands (e.g. `rtk git status`, `rtk npm test`).
+3. If not available, use the standard commands.
+
+Failure to use RTK when it is available is a violation of the "Aesthetics and Performance" contract.
+
+### CONTEXT MODE MANDATORY USAGE RULE
+
+When the `context-mode` MCP server is active, you MUST use its sandbox tools to prevent context window bloat:
+
+- PREFER `ctx_batch_execute` over running multiple individual commands.
+- PREFER `ctx_execute` or `ctx_execute_file` instead of standard terminal commands that output large data.
+- INSTEAD OF `curl` or `read_url_content` on large pages, ALWAYS use `ctx_fetch_and_index`.
+- If you lose track of session state, DO NOT ask the user to repeat themselves; use `ctx_search` to query previous thoughts and actions.
 
 ## Session Rules
+
+### CORE BEHAVIOR RULES
+
+**1. NO PROACTIVE COMMITS:**
+You MUST NOT proactively run `git add` or `git commit` after modifying files during general task execution. Committing is strictly reserved for the `finishing-a-development-branch` phase of the workflow. Do NOT prompt the user to commit files halfway through a workflow loop.
+
+**2. MANDATORY TASK TRACKING:**
+You MUST proactively update the `<project-root>/docs/plans/task.md` file after every significant action, file modification, or state change. You must not skip updating the task tracker.
 
 ### Tool Translation Contract
 
 When using this system, translate platform-specific references:
 
-| Original                 | Antigravity                      |
-| ------------------------ | -------------------------------- |
-| `Claude` / `Claude Code` | `Antigravity`                    |
-| `Skill` tool             | `view_file`                      |
-| `TodoWrite`              | Update `docs/plans/task.md`      |
-| `mega-mind:<skill>`      | `.agent/skills/<skill>/SKILL.md` |
-| `CLAUDE.md`              | `.agent/AGENTS.md`               |
+| Original                          | Antigravity                                |
+| --------------------------------- | ------------------------------------------ |
+| `Claude` / `Claude Code`          | `Antigravity`                              |
+| `Skill` tool                      | `view_file`                                |
+| `TodoWrite`                       | Update `<project-root>/docs/plans/task.md` |
+| `.claude/skills/<skill>/SKILL.md` | `.agent/skills/<skill>/SKILL.md`           |
+| `CLAUDE.md`                       | `.agent/AGENTS.md`                         |
+| `.claude/agents/*.md`             | `.agent/agents/*.md`                       |
+| `.claude/commands/*.md`           | `.agent/commands/*.md`                     |
 
 ### Execution Model
 
@@ -95,7 +116,7 @@ When using this system, translate platform-specific references:
 2. **User invokes** `/mega-mind` or a specific skill command
 3. **Request gets routed** to the most relevant skill(s)
 4. **Design work** flows through brainstorming → planning → execution
-5. **Every task** is tracked in `docs/plans/task.md` (created at runtime)
+5. **Every task** is tracked in `<project-root>/docs/plans/task.md` (created at runtime)
 6. **Nothing is marked done** without running verification commands first
 
 ### Workflow Flowchart
@@ -242,7 +263,8 @@ When a request comes in, `/mega-mind` routes to the appropriate skill:
 │  DOCUMENTATION & UX                                             │
 │  ├── "write docs"             → doc-writer                      │
 │  ├── "improve UX"             → ux-designer                     │
-│  └── "plan feature"           → product-manager                 │
+│  ├── "plan feature"           → product-manager                 │
+│  └── "optimize context"       → context-optimizer               │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -438,8 +460,9 @@ cargo install rtk
 │   ├── workflow-orchestrator/
 │   ├── skill-generator/
 │   │
-│   ├── # Token Optimization
-│   └── rtk/
+│   ├── # Token Optimization & Context
+│   ├── rtk/
+│   └── context-optimizer/
 │
 ├── workflows/
 │   ├── brainstorm.md

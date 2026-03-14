@@ -60,10 +60,15 @@ This is the **internal routing skill** that powers the `/mega-mind` orchestrator
 When a session starts:
 
 ```
-1. Load AGENTS.md rules
-2. Initialize task tracker (docs/plans/task.md)
+1. Load AGENTS.md/CLAUDE.md/.github/copilot-instructions.md rules
+2. Initialize task tracker (<project-root>/docs/plans/task.md)
 3. Scan available skills
 4. Ready to receive requests
+
+**Crucial Rules:**
+- NEVER proactively run `git add` or `git commit` after editing files.
+- Committing is strictly deferred to the `finishing-a-development-branch` skill.
+- ALWAYS update the `<project-root>/docs/plans/task.md` file after every step.
 ```
 
 ## Skill Routing Decision Tree
@@ -85,6 +90,8 @@ INCOMING REQUEST
        │                        └──→ writing-plans
        │
        ├─── Code Quality? ───→ code-polisher
+       │
+       ├─── Context / Memory? ───→ context-optimizer
        │
        ├─── Testing? ───→ test-driven-development
        │                    │
@@ -202,7 +209,7 @@ Route:
 5. verification-before-completion (verify deployment)
 ```
 
-## Session State Tracking (docs/plans/task.md)
+## Session State Tracking (<project-root>/plans/task.md)
 
 ```markdown
 # Mega-Mind Session State
@@ -265,6 +272,7 @@ test-driven-development → verification-before-completion
 | New feature   | tech-lead                      | brainstorming, writing-plans    |
 | Bug fix       | systematic-debugging           | bug-hunter                      |
 | Code quality  | code-polisher                  | -                               |
+| Context       | context-optimizer              | -                               |
 | Performance   | performance-profiler           | -                               |
 | Security      | security-reviewer              | -                               |
 | Testing       | test-driven-development        | test-genius                     |
@@ -287,4 +295,4 @@ test-driven-development → verification-before-completion
 - Start with the primary skill for the request type
 - Let each skill guide you to the next appropriate skill
 - Use verification-before-completion before any merge
-- Track all work in docs/plans/task.md
+- Track all work in <project-root>/docs/plans/task.md

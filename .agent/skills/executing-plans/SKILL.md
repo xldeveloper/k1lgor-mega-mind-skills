@@ -35,7 +35,7 @@ For each step in the plan:
 1. **Mark step as in-progress** in task tracker
 2. **Implement the step** following the plan's guidance
 3. **Test locally** before moving on
-4. **Update task tracker** when complete
+4. **Update task tracker** when complete (DO NOT run `git add` or `git commit` here. Committing is reserved for the end of the workflow).
 5. **Run verification** for the phase (if at a checkpoint)
 
 ### Step 3: Handle Deviations
@@ -49,7 +49,7 @@ When the plan doesn't match reality:
 
 ### Step 4: Track Progress
 
-Update `docs/plans/task.md` after each step, ensuring you preserve the **Mega-Mind Session State** structure:
+Update `<project-root>/docs/plans/task.md` after each step, ensuring you preserve the **Mega-Mind Session State** structure:
 
 ```markdown
 # Mega-Mind Session State
@@ -85,7 +85,7 @@ FOR EACH PHASE:
     2. Implement
     3. Test locally
     4. Mark completed
-    5. Update docs/plans/task.md
+    5. Update <project-root>/docs/plans/task.md
 
   RUN PHASE VERIFICATION:
     - Run tests

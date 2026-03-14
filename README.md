@@ -191,7 +191,8 @@ mega-mind-skills/
 │
 └── .agent/
     ├── AGENTS.md                # Master contract and rules
-    │
+    ├── hooks/
+    │   └── hooks.json           # context-mode hooks registry
     ├── skills/
     │   ├── mega-mind/           # 🧠 Master orchestrator
     │   │
@@ -325,7 +326,7 @@ tech-lead → brainstorming → [architects] → writing-plans →
 
 ### Task Tracking
 
-All tasks are tracked in `docs/plans/task.md`:
+All tasks are tracked in `<project-root>/docs/plans/task.md`:
 
 | Task ID | Description  | Status  | Priority | Dependencies |
 | ------- | ------------ | ------- | -------- | ------------ |

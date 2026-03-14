@@ -93,6 +93,8 @@ mega-mind-orchestrator init --copilot --claude --force
 your-project/
 └── .agent/
     ├── AGENTS.md          # Master rules loaded at session start
+    ├── hooks/
+    │   └── hooks.json     # Context-mode hooks registry
     ├── skills/            # 42 skills (mega-mind, brainstorming, tech-lead, ...)
     ├── workflows/         # Pre-defined workflow sequences
     ├── agents/            # Persistent agent personas
@@ -105,9 +107,11 @@ your-project/
 ```
 your-project/
 ├── .agent/          # Standard AI tool format
-└── CLAUDE.md        # Specialized project rules for Claude
+├── CLAUDE.md        # Specialized project rules for Claude
 └── .claude/
-     └── skills/      # 42 skills as Agent Skills
+    ├── hooks/
+    │   └── hooks.json # Context-mode hooks registry for Claude Code
+    └── skills/      # 42 skills as Agent Skills
 ```
 
 ### With Copilot (`mega-mind-orchestrator init --copilot`)
@@ -117,6 +121,8 @@ your-project/
 ├── .agent/                            # Standard AI tool format
 └── .github/
     ├── copilot-instructions.md        # Global Copilot instructions
+    ├── hooks/
+    │   └── hooks.json                 # Context-mode hooks registry for GitHub Copilot
     ├── skills/                        # 42 skills as Agent Skills (open standard)
     │   ├── mega-mind/SKILL.md
     │   ├── brainstorming/SKILL.md

@@ -22,19 +22,89 @@ def install_skills(
     if not assets_src.exists():
         raise FileNotFoundError(f"Source assets not found at {assets_src}")
 
-    if agent_path.exists() and not force:
+    antigravity = not copilot and not claude
+
+    if agent_path.exists() and not force and antigravity:
         raise FileExistsError(
             f".agent directory already exists in {target_dir}. Use --force to overwrite."
         )
 
-    # Install to .agent/ (Antigravity / Claude / standard agent format)
-    shutil.copytree(assets_src, agent_path, dirs_exist_ok=True)
+    if antigravity:
+        # Install to .agent/ (Antigravity standard agent format)
+        shutil.copytree(assets_src, agent_path, dirs_exist_ok=True)
 
     if copilot:
         _install_github_copilot(assets_src, target_path, force)
 
     if claude:
         _install_claude_code(assets_src, target_path, force)
+
+    # Install hooks for context-mode compatibility in all generated environments
+    _install_hooks(target_path, force, copilot, claude, antigravity)
+
+
+def _install_hooks(
+    target_path: Path, force: bool, copilot: bool, claude: bool, antigravity: bool
+):
+    """Install hooks.json for context-mode in the respective environments."""
+    import json
+
+    def get_hook_content(target_env: str) -> str:
+        return json.dumps(
+            {
+                "hooks": {
+                    "PreToolUse": [
+                        {
+                            "type": "command",
+                            "command": f"context-mode hook {target_env} pretooluse",
+                        }
+                    ],
+                    "PostToolUse": [
+                        {
+                            "type": "command",
+                            "command": f"context-mode hook {target_env} posttooluse",
+                        }
+                    ],
+                    "PreCompact": [
+                        {
+                            "type": "command",
+                            "command": f"context-mode hook {target_env} precompact",
+                        }
+                    ],
+                    "SessionStart": [
+                        {
+                            "type": "command",
+                            "command": f"context-mode hook {target_env} sessionstart",
+                        }
+                    ],
+                }
+            },
+            indent=2,
+        )
+
+    # 1. Antigravity / default agent hooks
+    if antigravity:
+        agent_dir = target_path / ".agent" / "hooks"
+        agent_dir.mkdir(parents=True, exist_ok=True)
+        agent_file = agent_dir / "hooks.json"
+        if not agent_file.exists() or force:
+            agent_file.write_text(get_hook_content("antigravity"), encoding="utf-8")
+
+    if copilot:
+        copilot_dir = target_path / ".github" / "hooks"
+        copilot_dir.mkdir(parents=True, exist_ok=True)
+        copilot_file = copilot_dir / "hooks.json"
+        if not copilot_file.exists() or force:
+            copilot_file.write_text(
+                get_hook_content("vscode-copilot"), encoding="utf-8"
+            )
+
+    if claude:
+        claude_dir = target_path / ".claude" / "hooks"
+        claude_dir.mkdir(parents=True, exist_ok=True)
+        claude_file = claude_dir / "hooks.json"
+        if not claude_file.exists() or force:
+            claude_file.write_text(get_hook_content("claude-code"), encoding="utf-8")
 
 
 def _install_github_copilot(assets_src: Path, target_path: Path, force: bool):

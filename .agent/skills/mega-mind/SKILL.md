@@ -71,10 +71,11 @@ When a request comes in, analyze it:
    - Multi-phase → Full workflow
 
 4. EXECUTE with tracking
-   - Create task in docs/plans/task.md
+   - Create and update task in `<project-root>/docs/plans/task.md`
    - Route to first skill
-   - Track progress
+   - Track progress continuously
    - Chain to next skill
+   - DO NOT proactively run `git add` or `git commit` during task execution; defer to `finishing-a-development-branch`.
 ```
 
 ### Skill Routing Matrix
@@ -173,7 +174,7 @@ When a request comes in, analyze it:
 
 ## Session State Management
 
-### State File: docs/plans/task.md
+### State File: `<project-root>/docs/plans/task.md`
 
 ```markdown
 # Mega-Mind Session State
