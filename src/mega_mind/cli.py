@@ -16,32 +16,28 @@ def cli():
 @click.option(
     "--copilot",
     is_flag=True,
-    help="Also install GitHub Copilot-compatible files into .github/",
+    help="Install GitHub Copilot-compatible files into .github/",
 )
 @click.option(
     "--claude",
     is_flag=True,
-    help="Also install Claude Code-compatible files (CLAUDE.md, .claude/)",
+    help="Install Claude Code-compatible files (CLAUDE.md, .claude/)",
 )
 @click.option(
     "--opencode",
     is_flag=True,
-    help="Also install OpenCode-compatible files (.opencode/)",
+    help="Install OpenCode-compatible files (.opencode/)",
 )
 @click.option(
     "--codex",
     is_flag=True,
-    help="Also install Codex-compatible files (.codex/)",
+    help="Install Codex-compatible files (.codex/)",
 )
 def init(target_dir, force, copilot, claude, opencode, codex):
     """Initialize Mega-Mind skills in the target directory.
 
-    By default, installs to .agent/ for Antigravity / standard agent tools.
-
-    Use --copilot to also install into .github/ for GitHub Copilot (VS Code).
-    Use --claude to also install CLAUDE.md and .claude/ for Claude Code.
-    Use --opencode to also install into .opencode/ for OpenCode.
-    Use --codex to also install into .codex/ for Codex.
+    Without flags, installs to .agent/ (Antigravity / standard agent tools).
+    With platform flags, installs ONLY into the requested platform directories.
     """
     try:
         install_skills(target_dir, force, copilot, claude, opencode, codex)
