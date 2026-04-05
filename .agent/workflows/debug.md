@@ -65,7 +65,6 @@ Or use:
 
 ## Related Skills
 
-- `systematic-debugging` - The core debugging skill
-- `bug-hunter` - Finding root causes
+- `debugging` - Root cause analysis and rapid fix
 - `test-driven-development` - Writing regression tests
-- `verification-before-completion` - Verify before done
+- `verification-loop` - Verify before done

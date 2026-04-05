@@ -55,7 +55,7 @@ Use when ready to merge and deploy.
 ## Related Skills
 
 - `finishing-a-development-branch` - The core shipping skill
-- `verification-before-completion` - Final verification
+- `verification-loop` - Final verification
 - `ci-config-helper` - CI/CD configuration
 - `observability-specialist` - Post-deploy monitoring
 
@@ -65,7 +65,7 @@ The complete workflow from start to finish:
 
 ```
 /mega-mind route → search-first → tech-lead → brainstorming → writing-plans →
-test-driven-development → executing-plans → verification-before-completion → review → ship
+test-driven-development → executing-plans → verification-loop → review → ship
 ```
 
 Or simply:

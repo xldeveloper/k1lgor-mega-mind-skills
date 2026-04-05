@@ -13,7 +13,6 @@ Use for features requiring major architectural changes, deep security considerat
 ## Prerequisites
 
 - Feature request with high ambiguity or technical risk.
-- Project uses the v1.8.0 skill library.
 
 ## Steps
 
