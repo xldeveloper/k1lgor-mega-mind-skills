@@ -17,6 +17,13 @@ triggers:
 - All verifications have passed
 - Ready to merge into main branch
 
+## When NOT to Use
+
+- Feature work is not complete — do not wrap up a branch mid-feature just to get a PR open
+- Tests are still failing — fix them before starting the merge process
+- The plan still has incomplete steps — finish executing the plan first
+- There are uncommitted local changes that were not part of the intended feature scope
+
 ## Pre-Merge Checklist
 
 ```markdown
@@ -263,3 +270,36 @@ $ git push origin --delete feature/user-preferences
 - Rebase frequently to avoid large conflicts
 - Write good commit messages for future reference
 - Delete branches promptly after merge
+
+## Failure Modes
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Branch merged without CI passing because merge done manually | Branch protection not enforced; developer bypasses merge queue | Enable required status checks on the base branch; make CI a required check before merge is possible |
+| PR merged with unresolved review comments | Author dismissed comments without addressing them; reviewer not re-requested | Require all comments to be resolved before merge; use GitHub's "require conversation resolution" setting |
+| Release notes omitted, leaving next developer unable to understand changes | Release notes treated as optional; skipped under time pressure | Add release notes to the PR template as a required field; block merge if the section is empty |
+| Branch not deleted after merge, accumulating stale branch noise | No automatic branch deletion configured; developer forgets | Enable "automatically delete head branches" in repo settings; add branch cleanup to the merge checklist |
+| Squash-merge loses individual commit history needed for bisect debugging | Squash-merge used by default; team relies on git bisect for debugging | Use merge commit or rebase-merge when individual commits carry diagnostic value; document the merge strategy in CONTRIBUTING.md |
+
+## Anti-Patterns
+
+- Never merge a branch with failing CI because a broken build on the base branch blocks all other developers and the fix adds another unreviewed commit to the history.
+- Never dismiss review comments without addressing them because unaddressed comments represent unresolved concerns that will resurface as bugs or tech debt.
+- Never skip release notes because the next developer to diagnose a production issue needs to know what changed and when, and git log alone does not provide that context.
+- Never leave stale branches after merge because accumulated branches make it impossible to distinguish active from completed work and pollute branch listings.
+- Never squash-merge a branch with commits that have individual diagnostic value because squashing destroys the ability to bisect a regression to a specific commit.
+- Never merge without a passing CI run even for "trivial" changes because trivial changes have caused outages when they invalidate assumptions made by other parts of the system.
+
+## Self-Verification Checklist
+
+- [ ] All tests pass on the branch: `bun test` or `npm test` exits 0 with 0 failing tests
+- [ ] PR description includes what changed, why, and how to test it
+- [ ] Branch is rebased on latest main: `git log --oneline main..HEAD` count matches expected commits only
+- [ ] No debug code remaining: `grep -rn "console\.log\|debugger\|TODO\|FIXME\|print(" src/` returns = 0 matches
+- [ ] At least one reviewer has approved (not self-merged except emergencies)
+- [ ] Branch will be deleted after merge: `git branch -d <branch>` exits 0 post-merge
+- [ ] `continuous-learning-v2` has been queued: `grep -c "continuous-learning" docs/plans/task.md` returns > 0
+
+## Success Criteria
+
+This skill is complete when: 1) all CI checks pass on the PR, 2) at least one reviewer has approved, and 3) the branch is merged and deleted — leaving main in a clean, deployable state.

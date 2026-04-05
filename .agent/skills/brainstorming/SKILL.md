@@ -23,6 +23,13 @@ triggers:
 - Solving complex problems with no obvious solution
 - Deciding between competing technologies or patterns
 
+## When NOT to Use
+
+- The solution is already decided and approved — don't brainstorm just for the appearance of process
+- The task is purely mechanical (e.g., renaming a variable, fixing a typo) where there is only one sensible approach
+- You are mid-execution of an approved plan — re-opening the approach decision mid-build creates scope drift
+- The problem is fully defined with explicit implementation instructions from the user — go straight to planning
+
 ## Instructions
 
 ### Step 0: Search First (MANDATORY)
@@ -234,3 +241,35 @@ Our API is experiencing high latency under load. We need to implement a caching 
 - Involve relevant stakeholders when appropriate
 - Document the decision-making process for future reference
 - Be willing to revisit decisions if new information emerges
+
+## Self-Verification Checklist
+
+- [ ] At least 3 distinct approaches generated: `grep -c "^### Approach\|^## Option\|^### Option" brainstorm.md` returns >= 3
+- [ ] `search-first` was invoked before generating approaches — existing solutions documented and `grep -c "search-first" task.md` returns > 0
+- [ ] Trade-offs documented for every approach: `grep -c "pros\|cons\|tradeoff\|trade-off" brainstorm.md` returns >= 3
+- [ ] A recommendation is stated with explicit rationale — `grep -c "Recommendation\|recommend\|chosen" brainstorm.md` returns > 0
+- [ ] The mandatory user confirmation gate is present — no code or files written before user selects an approach
+- [ ] The chosen approach is recorded in the session output or task.md
+
+## Success Criteria
+
+This skill is complete when: 1) at least 3 meaningfully distinct approaches have been evaluated with trade-offs documented, 2) `search-first` has confirmed there is no existing library or tool that makes the problem trivial, and 3) the user has explicitly selected an approach before any planning or implementation begins.
+
+## Anti-Patterns
+
+- Never skip the brainstorming phase and jump directly to implementation because the first solution that comes to mind is rarely optimal and early commitment to a weak approach compounds into expensive rework.
+- Never allow brainstorming to continue indefinitely without a hard time-box because an unbounded session produces more options than can be evaluated and leaves the agent in an open loop with no decision made.
+- Never evaluate options during the generation phase because premature evaluation anchors the session on early ideas and suppresses the divergent thinking that produces non-obvious solutions.
+- Never use the brainstorm output as the final plan without a separate narrowing step because raw brainstorm output is a list of candidates, not a ranked decision, and handing it to execution causes the executor to make the narrowing decision implicitly.
+- Never brainstorm only the happy path because a solution that fails to account for error cases, edge inputs, and adversarial conditions will require a second brainstorm after the first implementation fails.
+- Never record brainstorm output in a format that cannot be referenced later because decisions made during brainstorming that are not persisted will be re-litigated in every subsequent phase, wasting time that was already spent.
+
+## Failure Modes
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Session produces ideas but no decision made, leaving agent in open loop | Brainstorm phase never transitions to evaluation/narrowing phase | Set a hard time-box; end every brainstorm with an explicit "narrow to N options" step |
+| All options evaluated as equal, blocking progress | Criteria not defined before evaluation; agent avoids commitment | Define decision criteria (cost, risk, reversibility) before generating options |
+| Brainstorm output used as final plan without narrowing | Output handed directly to execution without a selection step | Treat brainstorm output as raw material; always run a separate "pick and justify" step |
+| Time-boxed exploration skipped, jumping straight to implementation | Pressure to ship overrides structured thinking | Enforce brainstorm as a mandatory phase gate; record why it was skipped if bypassed |
+| Only happy path explored, missing edge cases that block implementation | Agent anchors on positive scenarios; adversarial thinking not prompted | Explicitly prompt for failure scenarios, edge cases, and worst-case outcomes as a separate brainstorm round |

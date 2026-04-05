@@ -18,6 +18,13 @@ triggers:
 - Creating utility functions
 - When code needs to be reliable and maintainable
 
+## When NOT to Use
+
+- Exploratory prototyping where requirements are unknown and the goal is discovery, not delivery
+- Pure configuration changes (environment variables, feature flags, YAML/JSON configs) with no logic
+- One-off scripts that will never be maintained or reused
+- Trivial getters/setters with no business logic — the test adds no specification value
+
 ## Instructions
 
 ### The TDD Cycle
@@ -174,13 +181,37 @@ async function register(data) {
 - **Use descriptive test names** - Should read like documentation
 - **Don't skip RED** - A test that passes immediately is suspicious
 
-## Anti-Patterns to Avoid
+## Anti-Patterns
 
-- ❌ Writing tests after implementation
-- ❌ Writing multiple tests before any implementation
-- ❌ Skipping refactoring step
-- ❌ Over-engineering in the GREEN phase
-- ❌ Testing implementation details instead of behavior
+- Never write the implementation before the test because writing implementation first biases every test you then write toward confirming what the code already does, not toward specifying what it should do, and the RED phase is never genuinely red.
+- Never write a test that cannot fail because a test that always passes regardless of the implementation provides zero specification value; it counts toward coverage metrics while protecting no actual behaviour.
+- Never skip the refactor step of red-green-refactor because a codebase that only receives RED and GREEN passes accumulates structural debt in every TDD cycle until the test suite itself becomes too tangled to maintain.
+- Never write multiple failing tests before making them pass because multiple simultaneous failing tests make it impossible to confirm that each GREEN implementation is minimal; you cannot isolate which implementation change fixed which test.
+- Never write a test that tests the framework instead of your code because a test that verifies Jest's mock system works, or that Express routes requests, is a test of the library vendor's code, not yours, and adds no safety net for your logic.
+- Never accept a green test suite as proof of correctness because a green test suite proves only that the code behaves according to the tests written; it says nothing about untested behaviour, integration points, or requirements that were never translated into tests.
+
+## Success Criteria
+
+This skill is complete when: 1) Every new unit of functionality has at least one test written before its implementation. 2) Each RED → GREEN → REFACTOR cycle is documented and the test suite stays green throughout. 3) No implementation code was written without a failing test first — the RED phase was confirmed for every cycle.
+
+## Failure Modes
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Testing implementation details not behaviour, test breaks on safe refactor | Test asserts on internal variable names, method call counts, or private state instead of observable output | Rewrite the test to assert only on inputs and public outputs; if the test breaks on a rename, the test is testing the wrong thing |
+| Test passes but logic is wrong (false green from mocked dependency) | Mock returns a hardcoded value that never matches production; actual integration never exercised | Add at least one integration test (no mocks) for each critical path; use contract tests to verify mock behaviour matches the real dependency |
+| Refactor step skipped under time pressure, accumulating technical debt | Team treats RED → GREEN as done; refactor is deferred indefinitely under sprint pressure | Enforce the refactor step as a mandatory phase; a story is not done until the REFACTOR pass is completed and the test suite is still green |
+| Test suite too slow (>30s) for TDD red-green-refactor loop to be practical | Full integration suite runs on every `npm test`; unit tests mixed with database-hitting tests | Separate fast unit tests from slow integration tests; ensure `npm test` runs only fast tests (<10s); run integration tests in CI only |
+| Test written after implementation, not driving design (TDD theatre) | Developer writes implementation first, then writes a test to confirm the code they already wrote | Verify the RED phase via `git log --oneline` — test commit must precede implementation commit; if not, rewrite using TDD retroactively |
+
+## Self-Verification Checklist
+
+- [ ] Test written BEFORE implementation: `git log --oneline` shows test commit precedes implementation commit for each cycle
+- [ ] All tests green after refactor step: full test suite exits 0 after each REFACTOR pass
+- [ ] Test suite completes in < 30s for TDD loop: `time npm test` (or equivalent) confirms duration <= 30s
+- [ ] The RED phase was confirmed: `grep -c "FAIL\|failing\|red" tdd_log.md` returns > 0 (test actually failed before implementation)
+- [ ] GREEN implementation is minimal: `git diff --stat HEAD~1 HEAD` shows = 0 files changed beyond what the test required
+- [ ] No implementation code written without a failing test: `git log --oneline` count of test commits >= count of implementation commits
 
 ## Token Optimization (RTK)
 

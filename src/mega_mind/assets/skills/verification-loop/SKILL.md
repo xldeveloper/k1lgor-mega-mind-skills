@@ -10,6 +10,10 @@ triggers:
   - "pre-PR check"
   - "quality gate"
   - "verify all checks pass"
+  - "mark as done"
+  - "complete this task"
+  - "is this done"
+  - "verify this works"
 ---
 
 # Verification Loop
@@ -22,9 +26,19 @@ You are a verification specialist. You run a structured, repeatable 6-phase chec
 
 - After completing a feature or significant code change
 - Before creating or updating a PR
+- Before marking any task complete / saying "I'm done"
 - After refactoring
 - Periodically during long sessions (every 15–20 minutes)
 - When you want a comprehensive quality gate
+
+## When NOT to Use
+
+- Minor typo or comment-only changes — run a quick build check instead of all 6 phases
+- During rapid exploratory iteration — run full verification before PR, not after every experiment
+- As a substitute for writing tests — if Phase 4 fails because tests don't exist, write them
+- Mid-implementation when code is intentionally incomplete
+- When the task is purely exploratory/research with no implementation output
+- When asked for a partial review of one aspect — use `requesting-code-review` instead
 
 ---
 
@@ -32,17 +46,19 @@ You are a verification specialist. You run a structured, repeatable 6-phase chec
 
 ### Phase 0: Pre-Check — De-Sloppify
 
-Before running any automated checks, scan all changed files for artifacts:
+Before running any automated checks, scan all changed files for artifacts.
+
+> See: `.agent/shared/DE-SLOPPIFY.md` for the full checklist.
 
 ```bash
-# Find debug artifacts in changed files
-rtk git diff --name-only HEAD | xargs grep -l "console\.log\|debugger\|TODO\|FIXME\|pdb\.set_trace\|import pdb" 2>/dev/null
+git diff --name-only HEAD | xargs grep -l "console\.log\|debugger\|TODO\|FIXME\|pdb\.set_trace\|import pdb" 2>/dev/null
 ```
 
 - [ ] No debug code (console.log, print, debugger, breakpoints)
 - [ ] No resolved TODOs left as comments
 - [ ] No commented-out old code
 - [ ] No unused imports
+- [ ] Consistent formatting across all changed files
 
 > Fix these NOW. Running tests against messy code just makes the output harder to read.
 
@@ -52,16 +68,16 @@ rtk git diff --name-only HEAD | xargs grep -l "console\.log\|debugger\|TODO\|FIX
 
 ```bash
 # Node.js / TypeScript
-rtk proxy bun run build (or rtk proxy npm run build) 2>&1 | tail -20
+bun run build (or npm run build) 2>&1 | tail -20
 
 # Python
-rtk proxy python -m py_compile src/**/*.py 2>&1 | head -20
+python -m py_compile src/**/*.py 2>&1 | head -20
 
 # Go
-rtk proxy go build ./... 2>&1 | head -20
+go build ./... 2>&1 | head -20
 
 # Rust
-rtk proxy cargo build 2>&1 | tail -20
+cargo build 2>&1 | tail -20
 ```
 
 **STOP if build fails.** Do not run subsequent phases until build is clean.
@@ -72,13 +88,13 @@ rtk proxy cargo build 2>&1 | tail -20
 
 ```bash
 # TypeScript
-rtk npx tsc --noEmit 2>&1 | head -30
+npx tsc --noEmit 2>&1 | head -30
 
 # Python (pyright)
-rtk pyright . 2>&1 | head -30
+pyright . 2>&1 | head -30
 
 # Go (included in build)
-rtk go vet ./... 2>&1 | head -20
+go vet ./... 2>&1 | head -20
 ```
 
 Report all type errors. Fix critical ones. Document any acceptable `@ts-ignore` with a reason comment.
@@ -89,17 +105,16 @@ Report all type errors. Fix critical ones. Document any acceptable `@ts-ignore` 
 
 ```bash
 # JavaScript / TypeScript
-rtk bun run lint (or rtk npm run lint) 2>&1 | head -30
-# or: rtk npx eslint src/ --max-warnings 0
+bun run lint (or npm run lint) 2>&1 | head -30
 
 # Python
-rtk ruff check . 2>&1 | head -30
+ruff check . 2>&1 | head -30
 
 # Go
-rtk golangci-lint run 2>&1 | head -30
+golangci-lint run 2>&1 | head -30
 
 # Rust
-rtk cargo clippy 2>&1 | head -30
+cargo clippy 2>&1 | head -30
 ```
 
 ---
@@ -108,16 +123,16 @@ rtk cargo clippy 2>&1 | head -30
 
 ```bash
 # JavaScript / TypeScript
-rtk bun test (or rtk npm test) -- --coverage 2>&1 | tail -50
+bun test (or npm test) -- --coverage 2>&1 | tail -50
 
 # Python
-rtk pytest --cov=src --cov-report=term-missing 2>&1 | tail -50
+pytest --cov=src --cov-report=term-missing 2>&1 | tail -50
 
 # Go
-rtk go test ./... -cover 2>&1 | tail -30
+go test ./... -cover 2>&1 | tail -30
 
 # Rust
-rtk cargo test 2>&1 | tail -30
+cargo test 2>&1 | tail -30
 ```
 
 **Minimum coverage target: 80%** (or project-configured threshold)
@@ -139,20 +154,18 @@ If coverage is below target → write tests before proceeding.
 
 ### Phase 5: Security Scan
 
-Quick automated checks for common issues:
-
 ```bash
 # Check for hardcoded secrets / API keys
-rtk git diff --name-only HEAD | xargs grep -nE "(sk-|api_key|API_KEY|secret|password)\s*=\s*['\"][^'\"]{10}" 2>/dev/null | head -10
+git diff --name-only HEAD | xargs grep -nE "(sk-|api_key|API_KEY|secret|password)\s*=\s*['\"][^'\"]{10}" 2>/dev/null | head -10
 
 # Check for console.log in source (not test) files
-rtk grep -rn "console\.log" --include="*.ts" --include="*.tsx" src/ 2>/dev/null | grep -v ".test." | head -10
+grep -rn "console\.log" --include="*.ts" --include="*.tsx" src/ 2>/dev/null | grep -v ".test." | head -10
 
-# rtk bun pm untrusted (or rtk npm audit) (JavaScript projects)
+# JavaScript projects
 rtk bun pm untrusted (or rtk npm audit) --audit-level=high 2>&1 | tail -20
 
 # Python safety check
-rtk safety check 2>&1 | tail -20
+safety check 2>&1 | tail -20
 ```
 
 ---
@@ -160,14 +173,9 @@ rtk safety check 2>&1 | tail -20
 ### Phase 6: Diff Review
 
 ```bash
-# Summary of what changed
-rtk git diff --stat HEAD
-
-# Changed file list
-rtk git diff --name-only HEAD
-
-# Show full diff for review
-rtk git diff HEAD
+git diff --stat HEAD
+git diff --name-only HEAD
+git diff HEAD
 ```
 
 Review checklist for each changed file:
@@ -179,9 +187,63 @@ Review checklist for each changed file:
 
 ---
 
-## Output: Verification Report
+### Phase 7: Manual Verification
 
-After running all phases, produce this summary:
+Actually use the feature:
+
+- [ ] Feature works as expected
+- [ ] Edge cases handled (empty input, error states, boundary values)
+- [ ] Error states are graceful
+- [ ] Loading states are appropriate
+- [ ] Mobile/responsive (if applicable)
+- [ ] Accessibility (if applicable)
+- [ ] No console errors in browser/runtime
+
+### Phase 8: Integration Check
+
+Verify the change doesn't break other parts:
+
+- [ ] Related features still work
+- [ ] Navigation still works
+- [ ] API integrations still work
+- [ ] Database operations still work
+
+> See: `.agent/shared/VERIFICATION-GATE.md` for the canonical gate definition.
+
+---
+
+### Phase 9: Eval Harness (Complex Features)
+
+For features with acceptance criteria, run a structured eval:
+
+```markdown
+## Eval: [Feature Name]
+
+### Acceptance Criteria (from plan)
+
+- [ ] AC1: [criterion from original plan]
+- [ ] AC2: [criterion]
+
+### Evaluation
+
+| Criterion | Status | Evidence                         | Notes          |
+| --------- | ------ | -------------------------------- | -------------- |
+| AC1       | ✅     | Test #14 passes, manual verified |                |
+| AC2       | ✅     | API returns expected shape       |                |
+| AC3       | ⚠️     | Works but edge case X uncovered  | Add to backlog |
+
+### Result
+
+- PASS: All required criteria met
+- PARTIAL: [list unmet criteria]
+- FAIL: [blocking criteria not met]
+```
+
+**Only non-blocking gaps are acceptable for PASS.**
+
+---
+
+## Output: Verification Report
 
 ```
 VERIFICATION REPORT
@@ -194,19 +256,14 @@ Phase 3 - Lint:         ✅ PASS  (0 errors, 2 warnings — documented)
 Phase 4 - Tests:        ✅ PASS  (47/47, 84% coverage)
 Phase 5 - Security:     ✅ PASS  (no secrets found, 0 high CVEs)
 Phase 6 - Diff:         ✅ PASS  (8 files changed, all intentional)
+Phase 7 - Manual:       ✅ PASS  (feature verified end-to-end)
+Phase 8 - Integration:  ✅ PASS  (related features unaffected)
+Phase 9 - Eval:         ✅ PASS  (all AC met)
 
 Overall:  ✅ READY for PR
-
-Notes:
-- ESLint warning on line 42: "no-unused-vars" for debug variable — removed
-- Coverage on new auth module: 91% (well above threshold)
 ```
 
----
-
 ## Failure Template
-
-When a phase fails:
 
 ```
 VERIFICATION REPORT
@@ -217,24 +274,28 @@ Phase 1 - Build:        ✅ PASS
 Phase 2 - Types:        ❌ FAIL  (3 errors — see below)
 Phase 3 - Lint:         [skipped — fix types first]
 Phase 4 - Tests:        [skipped]
-Phase 5 - Security:     [skipped]
-Phase 6 - Diff:         [skipped]
+...
 
 Overall:  ❌ NOT READY
 
 Type Errors to Fix:
 1. src/auth/tokens.ts:47 — Type 'string | undefined' not assignable to 'string'
-   Fix: Add null check → `token ?? ""` or make param `token?: string`
 2. src/api/users.ts:103 — Property 'avatarUrl' does not exist on type 'User'
-   Fix: Add avatarUrl to User type in types.ts
-3. src/api/users.ts:104 — (same cause as #2)
 ```
 
 ---
 
-## Continuous Mode
+## Common Verification Failures
 
-For long development sessions, run a lighter check every 15 minutes or after major changes:
+| Failure Type | Example | Fix |
+|---|---|---|
+| Tests Failing | New field in model not in test fixtures | Update fixtures to match model |
+| Build Failing | `Type 'string \| undefined' not assignable to 'string'` | Add null check with default value |
+| Manual Failure | Feature works but shows console error | Add error boundary component |
+
+---
+
+## Continuous Mode
 
 ```
 QUICK CHECK (every 15 min or after each function/component):
@@ -243,34 +304,70 @@ QUICK CHECK (every 15 min or after each function/component):
   3. Tests ─ do existing tests still pass?
 
 FULL VERIFY (before PR):
-  All 6 phases
+  All phases
 ```
-
-Set a mental checkpoint:
-
-- After completing each function or component
-- Before moving to the next logical task
-- Before ending a session
 
 ---
 
 ## Decision Matrix
 
-| Build | Types | Lint | Tests | Security | PR Ready?                |
-| ----- | ----- | ---- | ----- | -------- | ------------------------ |
-| ❌    | —     | —    | —     | —        | **NO — fix build first** |
-| ✅    | ❌    | —    | —     | —        | **NO — fix types**       |
-| ✅    | ✅    | ❌   | —     | —        | **NO — fix lint**        |
-| ✅    | ✅    | ✅   | ❌    | —        | **NO — fix tests**       |
-| ✅    | ✅    | ✅   | ✅    | ❌       | **NO — fix security**    |
-| ✅    | ✅    | ✅   | ✅    | ✅       | **YES**                  |
+| Build | Types | Lint | Tests | Manual | PR Ready?                |
+| ----- | ----- | ---- | ----- | ------ | ------------------------ |
+| ❌    | —     | —    | —     | —      | **NO — fix build first** |
+| ✅    | ❌    | —    | —     | —      | **NO — fix types**       |
+| ✅    | ✅    | ❌   | —     | —      | **NO — fix lint**        |
+| ✅    | ✅    | ✅   | ❌    | —      | **NO — fix tests**       |
+| ✅    | ✅    | ✅   | ✅    | ❌     | **NO — manual verify**   |
+| ✅    | ✅    | ✅   | ✅    | ✅     | **YES**                  |
 
 ---
+
+## Failure Modes
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Loop exits early because agent misidentifies warning as pass | Exit condition checks absence of errors not warnings | Treat warnings as failures for blocking phases; use `--strict` flags |
+| Verification criteria defined after implementation | Criteria shaped by what passes, not what should pass | Define acceptance criteria before writing code |
+| Loop runs against wrong environment | Dev used instead of staging | Parameterise verification target; default to staging |
+| Results not recorded after loop | Agent runs phases but does not persist outcome | Write phase results to structured log after each phase |
+| Phase gate skipped due to ambiguous output | Agent interprets ambiguous output as pass | Default ambiguous output to FAIL; require explicit pass signal |
+| Build passes but tests not run | Test command omitted; CI and local scripts diverged | Consolidate into a single script; run locally before every completion claim |
+| Coverage threshold met by trivial tests | Tests execute code without asserting behaviour | Require meaningful assertions; check assertion-to-line ratio |
+| Regression in adjacent module not caught | Verification scoped to changed files only | Run full integration test suite; check import graph for affected consumers |
+
+## Anti-Patterns
+
+- Never define verification criteria after implementation — criteria defined post-hoc are shaped by what already passes.
+- Never skip a phase gate to save time — an unverified phase can mask a failure that makes all subsequent phases meaningless.
+- Never run verification only against the development environment — staging/production bugs remain invisible until deployment.
+- Never treat a warning as a pass in a blocking phase — warnings often become errors under slightly different inputs.
+- Never exit the loop without recording results — the next run cannot compare against a baseline.
+- Never redefine a phase's pass criterion mid-loop — changing goalposts invalidates all previous phases.
+- Never mark a task complete before running the full verification — partial verification misses regressions in adjacent modules.
+- Never count a green build as sufficient — the build may succeed while tests are skipped or not yet written.
+- Never skip verification because "it's a small change" — change size has no correlation with regression probability.
+- Never accept a passing linter as proof of correctness — linting checks style, not logic.
+
+## Self-Verification Checklist
+
+- [ ] All phases run in order and each has PASS or documented exception
+- [ ] Build passed before Phase 2 (exits 0)
+- [ ] Test coverage >= 80% confirmed
+- [ ] Security scan: `grep -rn "password\s*=\|api_key\s*=\|sk-" src/` = 0 matches
+- [ ] Diff review confirmed all changes intentional
+- [ ] `rtk bun test` exits code 0 (zero test failures); `rtk tsc` zero type errors; `rtk lint` no errors
+- [ ] Manual walkthrough confirms expected behavior end-to-end
+- [ ] Verification Report produced with READY / NOT READY verdict
+
+## Success Criteria
+
+This skill is complete when: 1) All phases have been run and each has a PASS or documented acceptable exception. 2) The Verification Report is produced and shows an overall READY verdict. 3) Any NOT READY verdict has specific fixes listed and the loop is re-run after fixing.
 
 ## Tips
 
 - **Run phases in order** — each phase builds on the previous
-- **Never open a PR without Phase 4 passing** — failing tests are resolved by reviewers, not authors
-- **Use RTK wrappers** for all phases to save context: `rtk bun test (or rtk npm test)`, `rtk tsc`, `rtk lint`
+- **Never open a PR without Phase 4 passing** — failing tests are resolved by authors, not reviewers
+- **Use RTK wrappers** for all phases to save context: `rtk bun test`, `rtk tsc`, `rtk lint`
 - **Save the report** — paste it in the PR description so reviewers see it immediately
 - **Phase 5 is the most overlooked** — hardcoded API keys in code are embarrassing and dangerous
+- **Don't skip manual testing** — automated tests don't catch everything; check in different environments if possible

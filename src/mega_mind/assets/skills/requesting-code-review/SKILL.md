@@ -17,6 +17,13 @@ triggers:
 - Before merging a significant change
 - When you want feedback on implementation
 
+## When NOT to Use
+
+- When the self-review checklist has not been completed — don't request external review for work you haven't reviewed yourself
+- When tests are failing — fix them first; reviewers shouldn't spend time on code with a broken test suite
+- For WIP / draft PRs where the implementation is known to be incomplete
+- When only asking for a rubber stamp on something already merged — review happens before merge, not after
+
 ## Pre-Review Checklist
 
 Before requesting review, ensure:
@@ -175,6 +182,38 @@ When you receive review feedback:
 2. **Address promptly** - Don't let reviews stall
 3. **Discuss if needed** - Ask for clarification
 4. **Mark resolved** - Track what's been addressed
+
+## Self-Verification Checklist
+
+- [ ] PR description includes all three required sections: `grep -c "what changed\|why\|how to verify\|motivation\|testing steps" <pr_description>` returns >= 3 matches — missing any section blocks review request
+- [ ] PR diff size within limit: `git diff main...HEAD --stat | tail -1` shows <= 400 lines changed, or a split rationale is documented in the PR description — `grep -c "split rationale\|must be larger" <pr_description>` returns >= 1 for oversized PRs
+- [ ] CI status checks all green before review requested: `gh pr checks <pr_number> | grep -c "fail\|error"` returns 0 — any failing check blocks review request
+- [ ] Self-review completed with all pre-review items ticked: `grep -c "\[x\]" <pr_checklist>` >= total checkbox count in the pre-review checklist — unticked items fail this check
+- [ ] No debug code remaining: `grep -rn "console\.log\|print(\|TODO\|FIXME" <changed_files>` returns 0 matches — any match is a blocking failure
+- [ ] PR scoped to a single concern: `grep -in "feature\|refactor\|bug fix\|chore" <pr_title>` returns exactly 1 category match — mixed-concern PRs require a documented justification or must be split
+
+## Success Criteria
+
+This skill is complete when: 1) the self-review checklist is completed with all tests passing, 2) the PR description is written with context for reviewers, and 3) the PR is submitted with appropriate reviewers tagged and no blocking issues remaining.
+
+## Anti-Patterns
+
+- Never request review on a PR with failing CI because sending a PR with a red build forces the reviewer to mentally filter out test failures from logic issues, making the review less effective and signalling a lack of self-review discipline.
+- Never submit a PR larger than 400 lines without splitting it because large PRs receive rubber-stamp reviews; reviewers lose the ability to hold the full diff in working memory and critical defects are reliably missed.
+- Never request review without a description of what changed and why because a context-free diff makes reviewers guess at intent, leading to comments that address the how rather than verifying the why.
+- Never assign review to someone without checking their availability because assigning a reviewer who is on leave or deep in another task creates review latency that blocks the PR without any apparent reason.
+- Never request review on a draft because a draft PR signals the work is incomplete; review comments on draft code are wasted if the implementation changes before the PR is marked ready.
+- Never re-request review without summarising what changed since the last review because requiring the reviewer to re-read the entire diff to find what you changed disrespects their time and delays the second-round approval.
+
+## Failure Modes
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| PR too large to meaningfully review, reviewer rubber-stamps it | Feature, refactor, and bug fix bundled into one PR; diff exceeds 400 lines | Split the PR into logical chunks (e.g., refactor first, feature second); if splitting is impossible, provide a guided review walkthrough with per-file context |
+| Blocking comment escalates but author and reviewer have no resolution path | Technical disagreement with no escalation process; comment thread grows without progress | Timebox the async thread to 48 hours; if unresolved, escalate to a 15-minute synchronous meeting with a designated decision-maker |
+| CI failing post-review causes delay because fix re-triggers full review cycle | Author merges CI fix after approval, requiring fresh review per branch protection rules | Keep CI green before requesting review; if CI breaks post-approval, communicate to reviewer the exact change made and request targeted re-review of only the fix |
+| Scope creep added to PR after approval, bypassing review | Author adds "one small thing" commit after approval without notifying reviewer | Never push new logic after approval without re-requesting review; use a comment noting the addition and explicitly ping the reviewer |
+| Reviewer ghosting blocks merge for >48h with no escalation path | Reviewer assigned but no response; no SLA defined for review turnaround | Ping the reviewer after 24h; escalate to a second reviewer after 48h; document the escalation path in the team working agreement |
 
 ## Tips
 

@@ -16,6 +16,13 @@ triggers:
 - When addressing review comments
 - When responding to requested changes
 
+## When NOT to Use
+
+- Before the review has been posted — there is nothing to receive yet
+- If there are zero blocking comments (only nitpicks) — respond in the PR thread and re-request without a full structured workflow
+- When the PR is in draft status — feedback on a draft is preliminary; use this skill once the PR is marked ready for review
+- For reviewing other people's code (use `requesting-code-review` for self-reviews or `code-polisher` for quality passes)
+
 ## Instructions
 
 ### Step 1: Read and Understand
@@ -200,3 +207,36 @@ Thanks for the thorough review! Please let me know if you have any other concern
 - Ask for clarification if you don't understand
 - Thank reviewers for catching issues
 - Learn from patterns in feedback
+
+## Anti-Patterns
+
+- Never dismiss a review comment without explaining why because a comment dismissed without rationale signals to the reviewer that their feedback is unwelcome, degrading future review quality and thoroughness.
+- Never push a "fix" to a review comment that doesn't address the underlying concern because a superficial fix that technically resolves the comment while ignoring the real issue will resurface as the same problem in a future PR.
+- Never merge immediately after addressing review comments because the reviewer who left the comments has not verified the fixes; merging before re-review silently bypasses the approval gate.
+- Never take review comments personally because conflating technical feedback with personal criticism causes defensive responses that shut down legitimate improvement conversations and create team friction.
+- Never address all review comments in a single commit because a single commit making 10 unrelated changes is impossible to revert selectively if one change introduces a regression.
+- Never mark a discussion as resolved without confirming with the reviewer because only the reviewer knows whether their concern was addressed; resolving on the author's behalf removes the reviewer's ability to verify the fix.
+
+## Failure Modes
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Reviewer leaves nit comments without distinguishing blockers from suggestions | Reviewer uses a flat list with no severity label; author treats all comments as equally optional | Ask reviewer to prefix comments with `blocker:`, `suggestion:`, or `nit:` before addressing any; re-read the thread with that lens |
+| Reviewer approves without reading critical path changes | Large PR; reviewer only skimmed the summary and approved to unblock | Request a targeted re-review of the specific critical files; add a comment pointing the reviewer to the files that need scrutiny |
+| Author pushes new commits during active review, invalidating previous comments | Author receives first round of feedback and immediately starts fixing and pushing without waiting for all reviewers | Batch all fixes from a single review round before pushing; note in the PR thread "addressing round 1 feedback" with a single consolidated push |
+| Review focused on style not logic, missing semantic bugs | Reviewer fixates on formatting/naming while the algorithmic logic is wrong | Explicitly ask reviewer to focus on correctness of the business logic; run the feature through the `systematic-debugging` checklist independently |
+| Stale approval after force-push, merging unreviewed changes | Author force-pushed a rebase or amended commits; GitHub kept the old approval; unreviewed diff merged | Enable "dismiss stale reviews on push" in branch protection rules; never merge after a force-push without fresh approval |
+
+## Self-Verification Checklist
+
+- [ ] All blocking comments addressed or explicitly deferred with written reason — count of unresolved blocking threads equals 0
+- [ ] No unreviewed commits pushed after approval — `git log --oneline <approval-commit>..HEAD` shows 0 commits (or all commits are trivial merge commits)
+- [ ] CI passing before merge — all required status checks green (exit code 0 on CI run)
+- [ ] All blocking (must-fix) comments have been addressed — none skipped
+- [ ] Tests still pass after the changes (`bun test` or `npm test` exits 0)
+- [ ] Re-review requested if the changes were significant (not just cosmetic)
+- [ ] Replied to all reviewer comments — either with a fix confirmation or a reasoned disagreement
+
+## Success Criteria
+
+This skill is complete when: 1) every blocking reviewer comment has a documented resolution (fixed, deferred with justification, or disputed with counter-argument), 2) the test suite still passes after all changes, and 3) the PR is re-submitted for review or merged with all participants notified.

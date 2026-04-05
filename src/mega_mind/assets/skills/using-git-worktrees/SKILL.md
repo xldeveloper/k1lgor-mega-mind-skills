@@ -18,6 +18,13 @@ triggers:
 - Running long tests on one branch while working on another
 - Reviewing PRs while working on a feature
 
+## When NOT to Use
+
+- Single-branch work with no concurrent development — worktrees add overhead with no benefit
+- When a quick stash is sufficient — if you need to context-switch for less than 5 minutes, `git stash` is lower friction
+- When disk space or Node.js/dependency install times are a concern — each worktree needs its own `node_modules`
+- On shared machines or CI environments where worktree paths are not predictable
+
 ## What Are Git Worktrees?
 
 Git worktrees allow you to have multiple working directories from the same repository, each checked out to a different branch.
@@ -246,4 +253,38 @@ clean_merged() {
         fi
     done
 }
+```
+
+## Anti-Patterns
+
+- Never create a worktree on a branch that is already checked out elsewhere because git will refuse the operation with a "fatal: already checked out" error, and working around it by detaching HEAD in the wrong directory corrupts your active working state.
+- Never leave worktrees orphaned after their branch is merged because each orphaned worktree consumes disk space and appears in `git worktree list`, making it impossible to tell which worktrees represent active work.
+- Never run package install commands in one worktree expecting them to take effect in another because each worktree has an independent `node_modules` directory; packages installed in worktree A are not available in worktree B.
+- Never share a build output directory between worktrees because concurrent builds from two worktrees writing to the same output directory produce interleaved, corrupted artifacts that neither worktree can reliably use.
+- Never create a worktree inside the main repository directory because a worktree nested inside the repo's own working tree is picked up by git as untracked content, creating confusing `git status` output and potential recursive git operations.
+- Never forget to `git worktree prune` after removing worktree directories manually because manually deleted worktree directories leave stale entries in the git worktree registry, causing `git worktree list` to show paths that no longer exist.
+
+## Failure Modes
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Worktree left behind after branch deleted, consuming disk space silently | Developer deletes remote branch and closes the PR but never runs `git worktree remove` | Run `git worktree prune` after each branch deletion; audit with `git worktree list` to confirm no stale entries remain |
+| Same branch checked out in two worktrees, causing lock conflict | Developer adds a new worktree for a branch that is already checked out in the main repo | Before adding a worktree, run `git worktree list` to confirm the branch is not already checked out; detach HEAD in the source worktree first |
+| Worktree path contains spaces, breaking shell scripts referencing it | Worktree directory named "my feature branch" with spaces; unquoted path in scripts fails | Always name worktrees with hyphens not spaces (e.g., `my-feature-branch`); audit existing worktree paths with `git worktree list` |
+| Shared `.env` file modified in worktree, affecting main checkout | `.env` is not gitignored and is shared by symlink or located at project root accessible from all worktrees | Add `.env` to `.gitignore`; use per-worktree `.env.local` files; never symlink shared mutable config files across worktrees |
+| IDE opens wrong worktree root, running tests against stale code | IDE session restored from previous project root; developer edits files in the wrong directory without noticing | Verify the active directory with `git branch --show-current` before running tests; use per-worktree IDE windows, not shared sessions |
+
+## Self-Verification Checklist
+
+- [ ] `git worktree list` shows only expected worktrees — count matches the number of active feature branches being worked on
+- [ ] All worktrees reference existing branches — `git worktree list` shows no entries with `(detached HEAD)` or deleted branch names
+- [ ] No shared mutable files (`.env`, `node_modules`) symlinked across worktrees — `ls -la` in each worktree root shows no symlinks to parent directories
+- [ ] Worktree directory names follow the `<project>-<branch>` convention (e.g., `myapp-feature-auth`)
+- [ ] Worktrees for merged branches have been removed (`git worktree remove` run and `git worktree prune` confirms 0 stale entries)
+- [ ] `git worktree prune` exits 0 with 0 pruned entries: all listed worktrees have valid directory paths
+- [ ] No shared lock files between worktrees: `ls -la .git/index.lock` returns "No such file" in all worktrees (exits non-zero)
+
+## Success Criteria
+
+This skill is complete when: 1) Each active feature or context has its own worktree with a descriptive name, fully installed dependencies, and the correct branch checked out. 2) Worktrees for completed/merged branches are cleaned up promptly. 3) `git worktree list` reflects only the worktrees currently in active use.
 ```

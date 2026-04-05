@@ -20,6 +20,13 @@ triggers:
 - Before starting complex multi-step work
 - When breaking down large tasks into manageable pieces
 
+## When NOT to Use
+
+- Tasks estimated under 1 hour that can be done in a single uninterrupted flow — the plan overhead exceeds the benefit
+- When requirements are still undefined or actively changing — wait until the scope is stable before creating a plan
+- Micro-tasks like fixing a single bug or updating a config value — an inline comment is sufficient
+- When an existing plan already covers the work — update the existing plan rather than creating a duplicate
+
 ## Instructions
 
 ### Step 1: Define Scope and Context
@@ -268,3 +275,35 @@ Implement a secure user authentication system with JWT tokens, supporting email/
 - Include time estimates but treat them as approximations
 - Review plans with the team before starting implementation
 - Keep plans granular enough to track progress but not so detailed they become outdated quickly
+
+## Failure Modes
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Plan steps are too coarse, causing agent to make unreviewed sub-decisions | Steps written at feature level, not task level; each step contains multiple implicit sub-steps | Decompose each step until it is a single, atomic action with a single verifiable output |
+| Plan has no dependency graph, causing steps to execute out of order | Steps listed as a flat sequence; parallelisable steps not identified; sequential dependencies not marked | Add a dependency annotation to each step (e.g. "requires step 3"); identify steps that can run in parallel |
+| Plan written for the author, not the executor | Assumes shared context; omits file paths, tool names, and expected outputs | Write every step as if the executor has no prior context; include exact file paths, commands, and expected outputs |
+| Plan scope creep: executor adds unrequested work mid-execution | Steps are underspecified; executor fills gaps with its own judgment | Add a "scope boundary" section listing what is explicitly out of scope; executor must not cross it without a plan revision |
+| Plan not versioned when requirements change | Plan edited in place without tracking what changed and why; prior decisions lost | Treat the plan as a versioned document; append a changelog entry for every revision with a reason |
+
+## Anti-Patterns
+
+- Never write a plan step without a verifiable output because a step without a success criterion cannot be marked complete objectively and the executor will self-report done without checking.
+- Never write a plan for yourself because a plan written with shared context assumptions fails when executed by any other agent or when you return to the task after context loss.
+- Never omit the scope boundary because without an explicit out-of-scope list, the executor treats every adjacent improvement as in scope and the plan becomes unbounded.
+- Never edit a plan in place without versioning because lost decision rationale is re-litigated in every subsequent execution and the plan diverges from its original intent.
+- Never write a flat step list without dependency annotations because the executor cannot determine which steps are parallelisable and which are sequential, wasting execution time or causing ordering failures.
+- Never skip the "expected output" field for each step because without it the executor cannot verify completion and will mark a step done based on the tool returning exit code 0 rather than on the actual output.
+
+## Self-Verification Checklist
+
+- [ ] Plan has phases with atomic steps — count of steps containing more than one imperative verb equals 0
+- [ ] Each phase ends with an explicit verification checkpoint — count of phases without a verification block equals 0
+- [ ] Dependencies between steps are annotated — every step that requires a prior step has a "requires step N" annotation
+- [ ] Rollback plan is present for any step that touches production data or public interfaces — count of production-touching steps without rollback equals 0
+- [ ] Time estimates are present for each phase — count of phases without an estimate equals 0
+- [ ] Non-Goals section lists ≥1 explicit out-of-scope item
+
+## Success Criteria
+
+This skill is complete when: 1) The plan has phases with atomic steps, each with a verification checkpoint. 2) Any engineer reading the plan can execute it without needing additional clarification on scope, order, or success criteria. 3) The plan is saved to `docs/plans/` and referenced in `task.md`.
