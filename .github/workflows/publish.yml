@@ -97,10 +97,26 @@ jobs:
           name: dist-packages
           path: dist/
 
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          # Extract section from CHANGELOG.md for this version
+          awk -v ver="$VERSION" '
+            BEGIN { found=0; output="" }
+            $0 ~ "^## \\[" ver "\\]" { found=1; next }
+            found && /^## \[/ { exit }
+            found { output = output $0 "\n" }
+            END { printf "%s", output }
+          ' CHANGELOG.md > /tmp/release_notes.md
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          cat /tmp/release_notes.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*
-          generate_release_notes: true
+          body: ${{ steps.changelog.outputs.body }}
           draft: false
           prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'rc') }}
