@@ -109,6 +109,16 @@ For each approach, consider:
 
 ### Step 4: Present Options and Wait for Selection
 
+- Coordination with downstream steps: brainstorm outputs should include a clear handoff directive to the next stage.
+- Output format (example):
+```
+Next: writing-plans
+Rationale: aligns with architecture decisions and reduces rework
+Payload: {"constraints": ["X", "Y"], "assumptions": ["A", "B"]}
+```
+
+- This ensures downstream skills can begin with the exact input they need and maintain a consistent context progression.
+
 After evaluation:
 
 1. **Present all evaluated approaches** with their scores

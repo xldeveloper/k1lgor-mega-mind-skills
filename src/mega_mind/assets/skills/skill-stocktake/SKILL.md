@@ -109,7 +109,7 @@ Produce a verdict JSON for each skill:
 | -------------- | ---------------------------- | -------------------------------------------------------------------------- |
 | brainstorming  | Keep                         | Strong approach generation, unique approval gate pattern                   |
 | some-old-skill | Retire                       | Tool referenced (X) deprecated in 2025; skill-generator covers same ground |
-| api-designer   | Merge into backend-architect | 40% overlap on REST patterns                                               |
+| backend-architect | Keep                         | Strong API design patterns, no redundancy                                      |
 ```
 
 ### Phase 4 — Action List
@@ -127,11 +127,11 @@ For each non-Keep verdict, create a concrete action:
 ### Medium Priority
 
 - [ ] **Improve** `test-genius`: Add mutation testing section
-- [ ] **Merge** `api-design` into `api-designer`: Integrate the pagination patterns
+- [ ] **Merge** `api-design` into `backend-architect`: Integrate the pagination patterns
 
 ### Low Priority
 
-- [ ] **Improve** `writing-skills`: Add instinct extraction section
+- [ ] **Improve** `skill-generator`: Add instinct extraction section
 ```
 
 ---
@@ -185,7 +185,7 @@ The `reason` field must be **self-contained and decision-enabling**:
 **For Merge:**
 
 - Bad: `"Overlaps with Y"`
-- Good: `"40-line thin content; Step 2 of backend-architect already covers REST pagination. Integrate the 'cursor-based pagination' example as a note in api-designer, then delete."`
+- Good: `"40-line thin content; Step 2 of backend-architect already covers REST pagination. Integrate the 'cursor-based pagination' example as a note in backend-architect, then delete."`
 
 **For Improve:**
 

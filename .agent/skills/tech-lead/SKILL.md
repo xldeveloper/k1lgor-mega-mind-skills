@@ -29,7 +29,7 @@ You are an experienced technical lead responsible for:
 
 ## When NOT to Use
 
-- Simple single-file changes or bug fixes that don't require cross-component reasoning — go directly to `systematic-debugging` or `code-polisher`
+- Simple single-file changes or bug fixes that don't require cross-component reasoning — go directly to `debugging` or `code-polisher`
 - When a detailed plan already exists and only execution is needed — use `executing-plans` instead
 - Routine CRUD endpoint additions with no architectural novelty — use `backend-architect` directly
 - Greenfield personal scripts or utilities with no team or scalability concerns

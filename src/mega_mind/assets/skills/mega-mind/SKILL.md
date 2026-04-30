@@ -64,6 +64,18 @@ Commands:
 
 ## Orchestration Engine
 
+### Coordination & Handoff Protocol
+- Standardize inter-skill handoffs to ensure smooth chaining.
+- After completing a skill, output a small, structured payload containing:
+  - next_skill: the name of the next skill in the chain (or null if end)
+  - payload: any data needed by the next skill
+  - status: "completed" or "errored"
+- The orchestrator uses next_skill to route automatically; if next_skill is null, chain ends.
+- Each skill should log a concise update to task.md describing the handoff and any decisions.
+- Timeouts and escalation: if a skill does not produce a valid next_skill within a defined window, escalate to an appropriate reviewer.
+- Conflict handling: if two candidate next_skills are suggested, Mega-Mind will choose the most appropriate based on context and chain history.
+- Reference patterns: leverage established coordination references such as the Conclave Multi-Agent Deliberation and other multi-agent orchestration patterns documented in external sources.
+
 ### Request Analysis
 
 When a request comes in, analyze it:
@@ -123,13 +135,13 @@ When a request comes in, analyze it:
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
 │  ARCHITECTURE & DESIGN                                              │
-│  ├── "design system"              → architect                       │
-│  ├── "design API"                 → backend-architect                │
+│  ├── "design system"              → tech-lead (+ architect agent)   │
+│  ├── "design API"                 → backend-architect               │
 │  ├── "design database"            → data-engineer                   │
 │  ├── "design frontend"            → frontend-architect              │
 │  ├── "design backend"             → backend-architect               │
 │  ├── "design infrastructure"      → infra-architect                 │
-│  ├── "plan comprehensive"         → planner                         │
+│  ├── "plan comprehensive"         → multi-plan (+ planner agent)    │
 │  └── "design mobile app"          → mobile-architect                │
 │                                                                     │
 │  DEVELOPMENT                                                        │
@@ -340,8 +352,8 @@ CORE WORKFLOW SKILLS (9)
 ├── finishing-a-development-branch Merge and deploy
 └── using-git-worktrees Parallel development
 
-DOMAIN EXPERT SKILLS (28) ✨ UPDATED
-├── Architecture: tech-lead, frontend-architect, backend-architect (+ API design), infra-architect
+DOMAIN EXPERT SKILLS (30) ✨ UPDATED
+├── Architecture: tech-lead, frontend-architect, backend-architect (+ API design), infra-architect _(agents: planner, architect)_
 ├── Development: code-polisher, migration-upgrader, mobile-architect, legacy-archaeologist, python-patterns
 ├── Testing: test-genius, e2e-test-specialist, eval-harness
 ├── DevOps: ci-config-helper (+ deploy pipelines), docker-expert, k8s-orchestrator (+ deploy strategies), observability-specialist

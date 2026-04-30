@@ -22,7 +22,7 @@ Commands: `status`, `skills`, `workflows`, `route <request>`, `execute <workflow
 
 The master controller that routes requests and coordinates skill chains:
 
-- `mega-mind` - Primary entry point via `/mega-mind` command
+- `mega-mind` - Primary entry point via `/mega-mind` command (also `/mmo`)
 
 ### Core Workflow Skills (9 skills)
 
@@ -36,17 +36,17 @@ Structured development discipline:
 - `receiving-code-review` - Handling feedback systematically
 - `finishing-a-development-branch` - Clean branch wrap-up with workflow options
 - `using-git-worktrees` - Parallel branch management
-- `using-mega-mind` - Internal skill routing logic
+- `mega-mind` - Master orchestrator and internal skill routing logic
 
-### Domain Expert Skills (29 skills) ✨ UPDATED
+### Domain Expert Skills (30 skills) ✨ UPDATED
 
 Specialized expertise for complex development tasks:
 
-- **Architecture:** `planner`, `architect`, `tech-lead`, `frontend-architect`, `backend-architect`, `infra-architect`
+- **Architecture:** `tech-lead`, `frontend-architect`, `backend-architect`, `infra-architect` _(also see agents: `planner`, `architect`)_
 - **Development:** `code-polisher`, `migration-upgrader`, `mobile-architect`, `legacy-archaeologist`, `python-patterns`
 - **Testing:** `test-genius`, `e2e-test-specialist`, `debugging`, `eval-harness`
 - **DevOps:** `ci-config-helper`, `docker-expert`, `k8s-orchestrator`, `observability-specialist`
-- **Data:** `data-engineer`, `data-analyst`, `ml-engineer`, `search-vector-architect`, `database-migrations`
+- **Data:** `data-engineer`, `data-analyst`, `ml-engineer`, `search-vector-architect`, `database-migrations`, `regex-vs-llm-structured-text`
 - **Security:** `security-reviewer`
 - **Performance:** `performance-profiler`
 - **Documentation:** `doc-writer`
@@ -69,6 +69,7 @@ Advanced patterns for efficiency and continuous improvement:
 - `multi-plan` - Collaborative multiple-model planning
 - `multi-execute` - Orchestrated multi-model execution and audit
 - `plankton-code-quality` - Write-time formatting and linting enforcement
+- `autoresearch-loop` - Karpathy self-improvement eval loop
 
 ### Token Optimization & Context (2 skills)
 
@@ -168,9 +169,9 @@ Eval definition format (save to `.agent/evals/<feature-name>.eval.md`):
 
 Invoke specialized agents via `.agent/agents/<name>.md`:
 
-- **`planner`** - Technical task architect; uses Z-Pattern decomposition.
-- **`architect`** - System design specialist; produces ADRs (Architecture Decision Records).
-- **`tech-lead`** - Senior technical lead; focus on modularity and patterns.
+- **`tech-lead`** - Senior technical lead; focus on modularity and patterns. _(Also a skill)_
+- **`planner`** - Technical task architect; uses Z-Pattern decomposition. _(Agent persona — `.agent/agents/planner.md`)_
+- **`architect`** - System design specialist; produces ADRs. _(Agent persona — `.agent/agents/architect.md`)_
 - **`code-reviewer`** - Quality gate specialist; focus on readability and standards.
 - **`security-reviewer`** - Vulnerability hunter; focus on OWASP Top 10.
 - **`qa-engineer`** - Testing specialist; focus on edge cases and coverage.
@@ -207,8 +208,8 @@ Check status via `rtk gain`.
 .agent/
 ├── AGENTS.md                    # Master contract
 ├── agents/                      # Specialized personas (.md)
-├── skills/                      # 53 Active skills (+ 8 redirects)
-│   └── debugging/               # Merged debugging skill
+├── skills/                      # 53 Active skills
+│   └── debugging/               # Merged debugging + bug-hunter skill
 ├── workflows/                   # Pre-defined executable chains
 ├── evals/                       # Eval definitions (EVAL-DRIVEN DEVELOPMENT)
 └── instincts/                   # Learned patterns & observations

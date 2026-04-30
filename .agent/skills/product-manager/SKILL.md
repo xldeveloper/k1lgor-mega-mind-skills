@@ -26,7 +26,7 @@ You are a product management specialist focused on planning, prioritization, and
 
 - Tasks that are already fully defined with acceptance criteria and assigned — go directly to implementation
 - Technical implementation decisions (e.g. which database to use) — use `tech-lead` or `backend-architect` instead
-- Bug triage and debugging — use `bug-hunter` or `systematic-debugging` instead
+- Bug triage and debugging — use `debugging` instead
 - When the scope is a single clearly-defined engineering task, not a product planning exercise
 
 ## User Story Framework

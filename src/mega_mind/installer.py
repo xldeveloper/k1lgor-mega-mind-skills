@@ -9,6 +9,7 @@ def install_skills(
     claude: bool = False,
     opencode: bool = False,
     codex: bool = False,
+    pi: bool = False,
 ):
     """Install skills into the target directory.
 
@@ -23,6 +24,7 @@ def install_skills(
         claude: Install CLAUDE.md and .claude/ for Claude Code.
         opencode: Install into .opencode/ for OpenCode.
         codex: Install into .codex/ for OpenAI Codex.
+        pi: Install into .pi/ and .agents/ for pi-coding-agent.
     """
     target_path = Path(target_dir).resolve()
     agent_path = target_path / ".agent"
@@ -36,7 +38,7 @@ def install_skills(
     # Determine whether any platform-specific flag was passed.
     # When NO flags are passed, `mmo init` installs into .agent/ (the default).
     # When flags ARE passed, ONLY the requested platforms are installed — .agent/ is NOT created.
-    any_platform = copilot or claude or opencode or codex
+    any_platform = copilot or claude or opencode or codex or pi
 
     if not any_platform:
         # Bare `mmo init` — install .agent/ as the canonical directory.
@@ -58,6 +60,9 @@ def install_skills(
     if codex:
         _install_codex(assets_src, target_path, force)
 
+    if pi:
+        _install_pi(assets_src, target_path, force)
+
     _install_hooks(
         target_path,
         force,
@@ -66,6 +71,7 @@ def install_skills(
         claude=claude,
         opencode=opencode,
         codex=codex,
+        pi=pi,
     )
 
 
@@ -77,6 +83,7 @@ def _install_hooks(
     claude: bool = False,
     opencode: bool = False,
     codex: bool = False,
+    pi: bool = False,
 ):
     """Install hooks.json for context-mode in the respective environments."""
     import json
@@ -134,6 +141,9 @@ def _install_hooks(
 
     if codex:
         write_hooks(target_path / ".codex" / "hooks", "codex")
+
+    if pi:
+        write_hooks(target_path / ".pi" / "hooks", "pi-coding-agent")
 
 
 def _install_github_copilot(assets_src: Path, target_path: Path, force: bool):
@@ -256,6 +266,50 @@ def _install_codex(assets_src: Path, target_path: Path, force: bool):
 
     # 4. Agent personas to .codex/agents/
     _copy_agents_with_frontmatter(assets_src, target_path / ".codex" / "agents", force)
+
+
+def _install_pi(assets_src: Path, target_path: Path, force: bool):
+    """Install pi-coding-agent-compatible files.
+
+    Pi loads skills from .pi/skills/ and .agents/skills/ (Agent Skills standard).
+    Prompt templates (slash commands) live in .pi/prompts/.
+    Context files: AGENTS.md and CLAUDE.md at root.
+
+    Creates:
+      AGENTS.md             — project context (pi reads root .md files)
+      CLAUDE.md             — fallback context (pi reads root .md files)
+      .pi/skills/           — all skills (pi project skill dir)
+      .pi/prompts/          — workflow prompt templates (pi slash commands)
+      .pi/agents/           — agent personas as prompt templates
+      .agents/skills/       — all skills (cross-tool Agent Skills standard)
+    """
+    agents_md = assets_src / "AGENTS.md"
+
+    # 1. AGENTS.md at root — pi reads it as context
+    root_agents_md = target_path / "AGENTS.md"
+    if agents_md.exists() and (not root_agents_md.exists() or force):
+        shutil.copy2(agents_md, root_agents_md)
+
+    # 2. CLAUDE.md at root — pi also reads this as fallback context
+    claude_md = target_path / "CLAUDE.md"
+    if agents_md.exists() and (not claude_md.exists() or force):
+        shutil.copy2(agents_md, claude_md)
+
+    # 3. Skills to .pi/skills/ (pi-specific project skill location)
+    _copy_skills(assets_src, target_path / ".pi" / "skills", force)
+
+    # 4. Shared snippets to .pi/shared/
+    _copy_shared(assets_src, target_path / ".pi" / "shared", force)
+
+    # 5. Workflows as prompt templates to .pi/prompts/
+    _copy_commands(assets_src, target_path / ".pi" / "prompts", force)
+
+    # 6. Agent personas to .pi/agents/ as prompt templates
+    _copy_agents_with_frontmatter(assets_src, target_path / ".pi" / "agents", force)
+
+    # 7. Also install to .agents/skills/ for cross-tool compatibility
+    #    (pi scans .agents/skills/ in cwd and ancestor directories)
+    _copy_skills(assets_src, target_path / ".agents" / "skills", force)
 
 
 # ---------------------------------------------------------------------------

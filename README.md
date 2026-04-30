@@ -4,7 +4,7 @@
 
 This is a comprehensive skill-based workflow system that combines the disciplined development workflows of [Superpowers](https://github.com/obra/superpowers) with the domain expertise of [Virtual Company](https://github.com/k1lgor/virtual-company) and [Everything-Claude-Code](https://github.com/affaan-m/everything-claude-code). It provides structured, reliable behavior for AI coding assistants across the entire software development lifecycle.
 
-**Compatible with:** Antigravity · GitHub Copilot (VS Code) · Claude Code · OpenCode · Codex · and any AI tool that supports the [Agent Skills open standard](https://agentskills.io)
+**Compatible with:** Antigravity · GitHub Copilot (VS Code) · Claude Code · OpenCode · Codex · pi · and any AI tool that supports the [Agent Skills open standard](https://agentskills.io)
 
 ## Overview
 
@@ -30,7 +30,7 @@ Structured development discipline that ensures quality at every step:
 - `using-git-worktrees` - Parallel development workflows
 - `skill-generator` - Create new custom skills
 
-### Domain Expert Skills (29 skills)
+### Domain Expert Skills (30 skills)
 
 Specialized expertise for specific technical domains:
 
@@ -45,7 +45,7 @@ Specialized expertise for specific technical domains:
 - **UX**: ux-designer
 - **Product**: product-manager, workflow-orchestrator
 
-### Meta & Learning Skills (11 skills)
+### Meta & Learning Skills (12 skills)
 
 Advanced patterns for efficiency and continuous improvement:
 
@@ -54,12 +54,13 @@ Advanced patterns for efficiency and continuous improvement:
 - `autonomous-loops` - Multi-step AI pipeline patterns without intervention
 - `skill-stocktake` - Quality audit and library maintenance
 - `cost-aware-llm-pipeline` - Model routing and token budget tracking
-- `verification-loop` - 6-phase continuous verification pipeline
+- `verification-loop` - Continuous verification pipeline
 - `iterative-retrieval` - Progressive context refinement for subagents
 - `content-hash-cache-pattern` - SHA-256 caching for file processing
 - `multi-plan` - Collaborative multiple-model planning
 - `multi-execute` - Orchestrated multi-model execution and audit
 - `plankton-code-quality` - Write-time formatting and linting enforcement
+- `autoresearch-loop` - Karpathy-style self-improvement eval loop
 
 ### Token Optimization & Context (2 skills)
 
@@ -122,9 +123,12 @@ uvx mmo init --opencode
 # Install only for Codex (no .agent/)
 uvx mmo init --codex
 
+# Install only for pi-coding-agent (no .agent/)
+uvx mmo init --pi
+
 # Overwrite an existing installation
 uvx mmo init --force
-uvx mmo init --copilot --claude --opencode --codex --force
+uvx mmo init --copilot --claude --opencode --codex --pi --force
 ```
 
 Behavior summary:
@@ -160,6 +164,16 @@ The `--codex` flag adds:
 - `AGENTS.md` at project root
 - `.codex/skills/` — all skills
 - `.codex/hooks/hooks.json` — context-mode hook integration
+
+The `--pi` flag adds:
+
+- `AGENTS.md` and `CLAUDE.md` at project root
+- `.pi/skills/` — all 53 skills in pi's project skill directory
+- `.pi/prompts/` — Mega-Mind workflow files exposed as pi prompt templates
+- `.pi/agents/` — agent personas as prompt templates
+- `.pi/shared/` — shared reference docs
+- `.pi/hooks/hooks.json` — context-mode hook integration
+- `.agents/skills/` — cross-tool Agent Skills standard path (pi scans this)
 
 The generated `hooks.json` files call commands such as:
 
@@ -324,9 +338,9 @@ mega-mind-skills/
     │       └── context-optimizer/
     │
     ├── shared/
-    │   ├── routing.md
-    │   ├── templates.md
-    │   └── metadata.md
+    │   ├── DE-SLOPPIFY.md
+    │   ├── RTK_GUIDE.md
+    │   └── VERIFICATION-GATE.md
     │
     ├── workflows/
     │   ├── brainstorm.md
@@ -344,9 +358,6 @@ mega-mind-skills/
     │   ├── qa-engineer.md
     │   ├── security-reviewer.md
     │   └── tech-lead.md
-    │
-    └── tests/
-        └── run-tests.sh
 ```
 
 ---
@@ -488,13 +499,16 @@ uvx mmo init --opencode
 # Also install for Codex
 uvx mmo init --codex
 
+# Also install for pi-coding-agent
+uvx mmo init --pi
+
 # Install into a specific path
 uvx mmo init /path/to/project
 uvx mmo init /path/to/project --copilot
 
 # Overwrite existing installation
 uvx mmo init --force
-uvx mmo init --copilot --claude --opencode --codex --force
+uvx mmo init --copilot --claude --opencode --codex --pi --force
 
 # Show CLI version
 uvx mmo --version

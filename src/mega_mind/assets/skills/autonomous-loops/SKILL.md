@@ -325,7 +325,7 @@ These patterns compose well:
 
 1. **Sequential + De-Sloppify** — Most common: every implement step gets a cleanup pass
 2. **Continuous PR + De-Sloppify** — Add cleanup directive to each iteration
-3. **Any loop + Verification** — Use `verification-before-completion` as exit gate
+3. **Any loop + Verification** — Use `verification-loop` as exit gate
 4. **DAG + Model Routing** — Route simple tasks to Haiku, complex to Opus
 
 ---

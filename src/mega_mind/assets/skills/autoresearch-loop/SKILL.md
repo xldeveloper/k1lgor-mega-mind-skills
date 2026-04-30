@@ -211,7 +211,7 @@ The eval corpus lives in `.agent/evals/`:
 ├── changes.md                   # Log of all changes made
 └── per-skill/
     ├── ml-engineer.md           # Test cases for ml-engineer skill
-    ├── systematic-debugging.md  # Test cases for systematic-debugging
+    ├── debugging.md  # Test cases for debugging
     └── ...                      # One file per skill
 ```
 
@@ -306,7 +306,7 @@ The autoresearch run is complete when:
 
 Chain position:
 ```
-continuous-learning-v2 → autoresearch-loop → skill-generator → skill-stocktake → writing-skills
+continuous-learning-v2 → autoresearch-loop → skill-generator → skill-stocktake
 ```
 
 After completion, run `continuous-learning-v2` to capture any new patterns discovered during the

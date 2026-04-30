@@ -65,7 +65,7 @@ The complete workflow from start to finish:
 
 ```
 /mega-mind route → search-first → tech-lead → brainstorming → writing-plans →
-test-driven-development → executing-plans → verification-loop → review → ship
+test-driven-development → executing-plans → verification-loop → review → ship → continuous-learning-v2
 ```
 
 Or simply:

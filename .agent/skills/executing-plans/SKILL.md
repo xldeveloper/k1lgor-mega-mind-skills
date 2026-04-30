@@ -104,7 +104,7 @@ Update `<project-root>/docs/plans/task.md` after each step, ensuring you preserv
 2. ✅ brainstorming
 3. ✅ writing-plans
 4. 🔄 executing-plans (current)
-5. ⏳ verification-before-completion
+5. ⏳ verification-loop
 
 ## Context
 
@@ -131,7 +131,7 @@ FOR EACH PHASE:
     - Verify behavior vs. acceptance criteria
 
   IF VERIFICATION FAILS:
-    - Debug issue (use systematic-debugging skill if needed)
+    - Debug issue (use debugging skill if needed)
     - Fix implementation
     - Re-run de-sloppify
     - Re-run verification

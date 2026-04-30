@@ -31,7 +31,7 @@ Use after a plan is approved and ready for implementation.
 ### 4. Final Quality Gate (verification-loop)
 
 - Run `/verify` to trigger the **`verification-loop`**.
-- Pass all 6 phases:
+- Pass all automated phases (Phases 0-6) plus manual verification (Phases 7-9):
   1. Phase 0: De-Sloppify Check
   2. Phase 1: Build
   3. Phase 2: Types
@@ -39,6 +39,9 @@ Use after a plan is approved and ready for implementation.
   5. Phase 4: Tests + Coverage
   6. Phase 5: Security Scan
   7. Phase 6: Diff Review
+  8. Phase 7: Manual Verification
+  9. Phase 8: Integration Check
+  10. Phase 9: Eval Harness (if applicable)
 
 ### 5. Task Completion
 

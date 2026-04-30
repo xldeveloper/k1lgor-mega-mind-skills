@@ -1,6 +1,6 @@
 # De-Sloppify Checklist
 
-> Shared snippet referenced by: `executing-plans`, `verification-loop`, `single-flow-task-execution`, `plankton-code-quality`
+> Shared snippet referenced by: `executing-plans`, `verification-loop`, `plankton-code-quality`
 
 Run this checklist on **every changed file** after each implementation step, before marking the step complete.
 

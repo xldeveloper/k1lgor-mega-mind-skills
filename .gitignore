@@ -85,3 +85,7 @@ docs/plans/
 !.env.example
 *.pem
 *.key
+
+.pi/
+.sisyphus/
+.opencode/

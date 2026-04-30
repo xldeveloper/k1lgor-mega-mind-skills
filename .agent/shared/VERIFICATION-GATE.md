@@ -1,6 +1,6 @@
 # Verification Gate Checklist
 
-> Shared snippet referenced by: `executing-plans`, `verification-loop`, `verification-before-completion`, `single-flow-task-execution`
+> Shared snippet referenced by: `executing-plans`, `verification-loop`
 
 Run this gate before marking any phase, step, or task as complete.
 

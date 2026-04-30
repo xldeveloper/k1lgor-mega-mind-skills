@@ -42,7 +42,7 @@ Use for features requiring major architectural changes, deep security considerat
 ### 5. Continuous Verification (verification-loop)
 
 - Run the **`verification-loop`**.
-- Execute all 6 phases: De-Sloppify ➔ Build ➔ Types ➔ Lint ➔ Tests ➔ Security.
+- Execute all automated phases: De-Sloppify ➔ Build ➔ Types ➔ Lint ➔ Tests ➔ Security ➔ Diff Review, plus manual verification (Phases 7-9).
 - Target coverage: 80%+.
 
 ### 6. Security Audit (security-reviewer)

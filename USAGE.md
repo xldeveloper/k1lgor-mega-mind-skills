@@ -107,6 +107,16 @@ uvx mmo init --codex
 
 This installs `AGENTS.md`, `.codex/skills/`, `.codex/agents/`, `.codex/shared/`, and `.codex/hooks/hooks.json`.
 
+### For pi-coding-agent
+
+To also install in the format pi expects, add the `--pi` flag:
+
+```bash
+uvx mmo init --pi
+```
+
+This installs `AGENTS.md`, `CLAUDE.md`, `.pi/skills/`, `.pi/prompts/`, `.pi/agents/`, `.pi/shared/`, `.pi/hooks/hooks.json`, and `.agents/skills/` (cross-tool standard path).
+
 This installs:
 
 - `.agent/` — Core skill system for the default install (`mmo init` with no platform flags)
@@ -131,7 +141,8 @@ uvx mmo init --claude --force
 uvx mmo init --copilot --force
 uvx mmo init --opencode --force
 uvx mmo init --codex --force
-uvx mmo init --copilot --claude --opencode --codex --force
+uvx mmo init --pi --force
+uvx mmo init --copilot --claude --opencode --codex --pi --force
 ```
 
 > ⚠️ `--force` overwrites the existing directories completely.
@@ -148,7 +159,7 @@ your-project/
     ├── AGENTS.md          # Master rules loaded at session start
     ├── hooks/
     │   └── hooks.json     # Context-mode hooks registry
-    ├── skills/            # 60+ skills (mega-mind, brainstorming, tech-lead, ...)
+    ├── skills/            # 53 skills (mega-mind, brainstorming, tech-lead, ...)
     ├── workflows/         # Pre-defined workflow sequences
     ├── agents/            # Persistent agent personas
     └── instincts/         # Learned patterns
@@ -216,6 +227,23 @@ your-project/
     └── agents/        # Agent personas
 ```
 
+### With pi (`mmo init --pi`)
+
+```
+your-project/
+├── AGENTS.md
+├── CLAUDE.md
+├── .pi/
+│   ├── hooks/
+│   │   └── hooks.json  # Context-mode hooks registry for pi
+│   ├── skills/         # 53 skills (pi project skill dir)
+│   ├── prompts/        # Workflow files as pi prompt templates
+│   ├── shared/         # Shared snippet files referenced by skills
+│   └── agents/         # Agent personas as prompt templates
+└── .agents/
+    └── skills/         # Cross-tool Agent Skills standard (pi scans this)
+```
+
 ---
 
 ## Step 4 — Verify the installation
@@ -223,40 +251,53 @@ your-project/
 Once initialized:
 
 1. Run `context-mode doctor` to verify the hook dependency is installed and healthy
-2. Use the `/verify` command within your AI assistant (e.g. Antigravity or GitHub Copilot) to run the **verification-before-completion** protocol
+2. Use the `/verify` command within your AI assistant (e.g. Antigravity or GitHub Copilot) to run the **verification-loop** protocol
 
 This ensures both the hook integration and the skill system are correctly loaded and ready for use.
 
 ---
 
-## Step 5 — Use in GitHub Copilot (VS Code)
+## Step 5 — Using Mega-Mind Skills
 
-After `mmo init --copilot`, open VS Code with GitHub Copilot enabled.
+Once installed, the skills integrate automatically with your AI coding assistant. How you invoke them depends on the tool:
 
-In the Copilot Chat:
+### All Tools — The `/mega-mind` Orchestrator
 
-1. **Use skills as slash commands** — type `/` to see all 60 skills listed
-2. **Invoke mega-mind** — type `/mega-mind` to start the orchestrator
-3. **Direct skill commands** — type `/brainstorming`, `/tech-lead`, `/debug`, etc.
-
-Copilot does not have a commands/workflows directory equivalent, so Mega-Mind workflow files are only exposed as slash commands for Claude Code and OpenCode.
-
-Skills use Copilot's **progressive disclosure** system:
-
-- Copilot reads `name` + `description` upfront (lightweight)
-- Full instructions load only when the skill is relevant to your request
-- You can force-invoke any skill with its `/` slash command
-
----
-
-## Usage (all tools)
-
-Once installed, use the `/mega-mind` command in your AI assistant chat to start orchestrating:
+The primary entry point across all platforms:
 
 ```
 /mega-mind help
 /mega-mind route I need to add OAuth authentication
 /mega-mind route fix the login bug
+/mega-mind status
+/mega-mind skills
 ```
+
+### Direct Skill Invocation
+
+Most platforms support invoking skills directly as slash commands:
+
+| Command       | Skill                          | Purpose                            |
+| ------------- | ------------------------------ | ---------------------------------- |
+| `/brainstorm` | brainstorming                  | Explore approaches before deciding |
+| `/plan`       | writing-plans                  | Create implementation plan         |
+| `/execute`    | executing-plans                | Execute plan with tracking         |
+| `/debug`      | debugging                      | Debug systematically               |
+| `/review`     | requesting-code-review         | Request code review                |
+| `/ship`       | finishing-a-development-branch | Deploy to production               |
+| `/tdd`        | test-driven-development        | Test-first development             |
+| `/verify`     | verification-loop              | Verify before marking done         |
+
+### Platform-Specific Notes
+
+**GitHub Copilot (VS Code):** After `mmo init --copilot`, type `/` in Copilot Chat to see all 53 skills listed. Copilot uses progressive disclosure — full instructions load only when a skill is relevant. Workflow files are not exposed as slash commands (use `/mega-mind execute <workflow>` instead).
+
+**Claude Code:** After `mmo init --claude`, skills load from `.claude/skills/` and workflow commands from `.claude/commands/`. Use `/command-name` for workflow shortcuts.
+
+**OpenCode:** After `mmo init --opencode`, skills load from `.opencode/skills/` and commands from `.opencode/commands/`.
+
+**Codex:** After `mmo init --codex`, skills load from `.codex/skills/`. Use `/mega-mind` for orchestration.
+
+**pi:** After `mmo init --pi`, skills auto-load from `.pi/skills/` and `.agents/skills/`. Workflow prompt templates are available in `.pi/prompts/`.
 
 See the full [README](./README.md) for the complete command reference and skill routing matrix.

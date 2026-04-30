@@ -368,8 +368,8 @@ rtk proxy <unsupported-command>
 
 - `executing-plans` - Use RTK when running plan steps
 - `test-driven-development` - Use `rtk cargo test` / `rtk bun test` (or `rtk npm test`)
-- `systematic-debugging` - Use `rtk git diff` for changes
-- `verification-before-completion` - Use RTK for verification commands
+- `debugging` - Use `rtk git diff` for changes
+- `verification-loop` - Use RTK for verification commands
 
 ## Self-Verification Checklist
 

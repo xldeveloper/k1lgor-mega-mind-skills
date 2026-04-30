@@ -33,14 +33,19 @@ def cli():
     is_flag=True,
     help="Install Codex-compatible files (.codex/)",
 )
-def init(target_dir, force, copilot, claude, opencode, codex):
+@click.option(
+    "--pi",
+    is_flag=True,
+    help="Install pi-coding-agent-compatible files (.pi/, .agents/)",
+)
+def init(target_dir, force, copilot, claude, opencode, codex, pi):
     """Initialize Mega-Mind skills in the target directory.
 
     Without flags, installs to .agent/ (Antigravity / standard agent tools).
     With platform flags, installs ONLY into the requested platform directories.
     """
     try:
-        install_skills(target_dir, force, copilot, claude, opencode, codex)
+        install_skills(target_dir, force, copilot, claude, opencode, codex, pi)
         click.echo(
             click.style(
                 f" ✅ Successfully initialized Mega-Mind in {target_dir}",
@@ -85,6 +90,19 @@ def init(target_dir, force, copilot, claude, opencode, codex):
                 click.style(
                     "    📂 Codex files installed in .codex/",
                     fg="blue",
+                )
+            )
+        if pi:
+            click.echo(
+                click.style(
+                    "    🧩 pi-coding-agent files installed in .pi/ and .agents/",
+                    fg="bright_cyan",
+                )
+            )
+            click.echo(
+                click.style(
+                    "    📂 Skills loaded automatically by pi on session start",
+                    fg="bright_cyan",
                 )
             )
     except Exception as e:

@@ -526,7 +526,7 @@ An eval harness task is complete when:
 
 `eval-harness` is invoked by:
 
-- `verification-before-completion` as the final quality gate before marking a task complete
+- `verification-loop` as the final quality gate before marking a task complete
 - `continuous-learning-v2` to extract lessons from which eval cases repeatedly fail
 - `test-genius` when the task involves AI/LLM outputs that require probabilistic testing
 - `skill-generator` to verify a new skill's trigger scenarios are handled correctly
